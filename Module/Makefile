@@ -1,4 +1,5 @@
-KDIR=/lib/modules/$(uname -r )/build   
+#KDIR=/lib/modules/$(uname -r )/build 
+KDIR = /lib/modules/6.1.21+/build   
 EXTRA_CFLAGS+= -Wall -g 
 obj-m +=mymod.o  
 
