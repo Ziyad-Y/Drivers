@@ -3,7 +3,7 @@ EXTRA_CFLAGS+= -Wall -g
 obj-m +=mymod.o  
 
 kbuild: 
-	make -C $(KDIR) M=$(pwd) modules   
+	make -C $(KDIR) M=$(PWD) modules   
 
 clean:  
-	make -C $(KDIR) M=$(pwd) clean
+	make -C $(KDIR) M=$(PWD) clean
