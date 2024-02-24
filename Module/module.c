@@ -15,18 +15,15 @@ MODULE_DESCRIPTION("My first module")
 MODULE_VERSION("0.1")
 
 static int __init start_mod(void){
-	printk(KERN_INFO 
-		"Loading my first module ..... \n"); 
-	printk(KERN_INFO 
-		"Z's Module\n");
+	printk("Loading my first module ..... \n"); 
+	printk("Z's Module\n");
 
 	return 0;  
 
 }
 
 static void __exit end_mod(void){
-	printk(KERN_INFO
-		"Exiting first module\n");
+	printk("Exiting first module\n");
 }    
 
 
