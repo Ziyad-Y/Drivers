@@ -2,7 +2,7 @@ KDIR=/lib/modules/$(uname -r )/build
 EXTRA_CFLAGS+= -Wall -g 
 obj-m +=mymod.o  
 
-all: 
+kbuild: 
 	make -C $(KDIR) M=$(PWD) modules   
 
 clean:  
