@@ -1,8 +1,5 @@
 #KDIR=/lib/modules/$(uname -r )/build 
-CONFIG_PLATFORM_ARM_RPI = y
-CONFIG_PLATFORM_ARM64_RPI = n
-
-KDIR = /lib/modules/6.1.21-v7+/build   
+KDIR = /lib/modules/$(shell uname -r)/build   
 EXTRA_CFLAGS+= -Wall -g 
 obj-m +=module.o 
 
