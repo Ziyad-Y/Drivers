@@ -12,7 +12,7 @@ MODULE_AUTHOR("ME");
 MODULE_DESCRIPTION("My first module");  
 
 // MODULE VERSION 
-MODULE_VERSION("0.1");
+MODULE_VERSION("0.0.1");
 
 static int __init start_mod(void){
 	printk(KERN_INFO "Loading my first module ..... \n"); 
