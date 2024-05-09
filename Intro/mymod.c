@@ -6,7 +6,7 @@
 MODULE_LICENSE("GPL");   
 
 // AUTHOR  
-MODULE_AUTHOR("Ziyad Yacoubou");  
+MODULE_AUTHOR("ME");  
 
 // MODULE DESCRIPTION     
 MODULE_DESCRIPTION("My first module");  
