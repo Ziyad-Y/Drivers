@@ -17,7 +17,7 @@ static int arr[3]={0,1,2};
 static int argc=0;
 //MODULE PARAMS
 //--------- Single Types -----------------//
-module_param(myage, short,S_IRWXU | S_IRGRP | S_IWRGP);   
+module_param(myage, short,S_IRUSR| S_IWUSR | S_IRGRP | S_IWRGP);   
 MODEULE_PARM_DESC(myage, "Age")     
 module_param(myname , charp , 0000 );
 MODEULE_PARM_DESC(mystring , "Name");
