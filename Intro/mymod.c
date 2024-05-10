@@ -11,13 +11,13 @@ MODULE_AUTHOR("ME");
 MODULE_DESCRIPTION("My first module");  
 MODULE_VERSION("0.1");
 
-static short myage = 100;   
+static  int myage = 100;   
 static char *myname = "Random";
 static int arr[3]={0,1,2};   
 static int argc=0;
 //MODULE PARAMS
 //--------- Single Types -----------------//
-module_param(myage, short,S_IRUSR| S_IWUSR | S_IRGRP | S_IWRGP);   
+module_param(myage, int,S_IRUSR| S_IWUSR | S_IRGRP | S_IWRGP);   
 MODULE_PARM_DESC(myage, "Age")     
 module_param(myname , charp , 0000 );
 MODULE_PARM_DESC(myname , "Name");
