@@ -33,9 +33,6 @@ static int __init start_mod(void){
 	printk(KERN_INFO "My Module %d \n ", data);
 	printk(KERN_INFO, "Name is : %s\n", myname );   
 	printk(KERN_INFO, "I am %d years old \n", myage);      
-	for(i =0 ; < sizeof(arr)/sizeof(arr[0]) ; i++){
-		printk(KERN_INFO, "my array [%d] : [%d]\n", i , arr[i]);
-	}
 	return 0;  
 
 }
