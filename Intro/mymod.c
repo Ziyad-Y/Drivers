@@ -32,7 +32,7 @@ static int __init start_mod(void){
 	printk(KERN_INFO "Loading my first module ..... \n"); 
 	printk(KERN_INFO "My Module %d \n ", data);
 	printk(KERN_INFO "Name is : %s\n", myname);
-	printk(KERN_INFO, "I am %d years old \n", myage);      
+	printk(KERN_INFO "I am %d years old \n", myage);      
 	for(i =0 ; i < 3 ; i++){
 		printk(KERN_INFO "myintArray[%d] = %d\n", i, arr[i]);;
 	}
