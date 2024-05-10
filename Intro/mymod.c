@@ -19,7 +19,7 @@ static int argc=0;
 //--------- Single Types -----------------//
 module_param(myage, int,S_IRUSR| S_IWUSR | S_IWGRP  | S_IRGRP);   
 MODULE_PARM_DESC(myage, "Age")     
-module_param(myname , charp , 0);
+module_param(myname , char * , 0);
 MODULE_PARM_DESC(myname , "Name");
 //-------- Arrays -------------------------//
 module_param_array(arr, int, &argc, S_IRUSR|S_IRGRP | S_IROTH);   
