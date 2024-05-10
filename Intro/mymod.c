@@ -1,7 +1,7 @@
 #include <linux/kernel.h>
 #include <linux/init.h>  
 #include <linux/module.h> 
-  
+ 
 //MODULE LICENSE   
 MODULE_LICENSE("GPL");   
 
@@ -12,11 +12,11 @@ MODULE_AUTHOR("ME");
 MODULE_DESCRIPTION("My first module");  
 
 // MODULE VERSION 
-MODULE_VERSION("0.0.1");
-
+MODULE_VERSION("0.1");
+static int data __initdata = 1;
 static int __init start_mod(void){
 	printk(KERN_INFO "Loading my first module ..... \n"); 
-	printk(KERN_INFO "My Module\n");
+	printk(KERN_INFO "My Module %d \n ", data);
 
 	return 0;  
 
