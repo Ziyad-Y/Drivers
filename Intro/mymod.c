@@ -11,7 +11,7 @@ MODULE_AUTHOR("ME");
 MODULE_DESCRIPTION("My first module");  
 MODULE_VERSION("0.1");
 
-static short myage = 0;   
+static short myage = 100;   
 static char *myname = "Random";
 static int arr[3]={0,1,2};   
 static int argc=0;
@@ -31,10 +31,10 @@ static int __init start_mod(void){
 	int i;	
 	printk(KERN_INFO "Loading my first module ..... \n"); 
 	printk(KERN_INFO "My Module %d \n ", data);
-	printk(KERN_INFO, "Name is : %s\n", myname );   
+	printk(KERN_INFO "Name is : %s\n", myname);
 	printk(KERN_INFO, "I am %d years old \n", myage);      
 	for(i =0 ; i < 3 ; i++){
-		printk(KERN_INFO, "my array [%d] : [%d]\n", i , arr[i]);
+		printk(KERN_INFO "myintArray[%d] = %d\n", i, arr[i]);;
 	}
 	return 0;  
 
