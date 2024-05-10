@@ -12,7 +12,7 @@ MODULE_DESCRIPTION("My first module");
 MODULE_VERSION("0.1");
 
 static  int myage = 100;   
-static char *myname = "Random";
+static char myname[20] = "Random";
 static int arr[3]={0,1,2};   
 static int argc=0;
 //MODULE PARAMS
