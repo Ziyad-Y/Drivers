@@ -18,12 +18,12 @@ static int argc=0;
 //MODULE PARAMS
 //--------- Single Types -----------------//
 module_param(myage, short,S_IRUSR| S_IWUSR | S_IRGRP | S_IWRGP);   
-MODEULE_PARM_DESC(myage, "Age")     
+MODULE_PARM_DESC(myage, "Age")     
 module_param(myname , charp , 0000 );
-MODEULE_PARM_DESC(mystring , "Name");
+MODULE_PARM_DESC(myname , "Name");
 //-------- Arrays -------------------------//
 module_param_array(arr, int, &argc, 0000);   
-MODEULE_PARM_DESC(arr, "INT ARRAY");
+MODULE_PARM_DESC(arr, "INT ARRAY");
 
 static int data __initdata = 23;
 
