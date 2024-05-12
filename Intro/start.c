@@ -43,10 +43,6 @@ static int __init start_mod(void){
 
 }
 
-static void __exit end_mod(void){
-	pr_info("CLOSING MODULE\n");
-}    
 
 
 module_init(start_mod);  
-module_exit(end_mod);
