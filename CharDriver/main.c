@@ -6,7 +6,7 @@
 
 int main(void){
 
-	int fd = open("/dev/mychardv", O_RDONLY);    
+	int fd = open("/dev/mychardev", O_RDONLY);    
 
 	if(fd ==-1 ){
 		perror("Failed to open file\n");
