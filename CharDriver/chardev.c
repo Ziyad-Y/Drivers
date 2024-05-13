@@ -88,3 +88,5 @@ static void __exit chardev_exit(void)
 	unregister_chrdev(major, DEVICE_NAME);
 }
 
+module_init(chardev_init);     
+module_exit(chardev_exit);
