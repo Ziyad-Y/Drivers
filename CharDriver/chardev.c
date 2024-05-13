@@ -1,9 +1,6 @@
 
 #include "chardev.h"
-
-MODULE_DESCRIPTION("First Char Driver");   
-MODULE_AUTHOR("ME");  
-MODULE_VERSION("0.0.1");    
+  
 MODULE_LICENSE("GPL");              
 
 
@@ -90,3 +87,4 @@ static void __exit chardev_exit(void)
 	class_destroy(cls);   
 	unregister_chrdev(major, DEVICE_NAME);
 }
+
