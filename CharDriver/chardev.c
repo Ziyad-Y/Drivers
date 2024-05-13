@@ -68,7 +68,7 @@ static int major;
 static struct class * cls;
 
 static int __init chardev_init(void){
-	major = register_chrdev(0, DEVICE_NAME, devfops );   
+	major = register_chrdev(0, DEVICE_NAME, &devfops );   
 	if(major < 0){
 		pr_alert("REGISTERING CHAR DEVICE %d\n", major);
 		return major;
