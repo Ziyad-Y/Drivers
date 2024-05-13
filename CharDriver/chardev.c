@@ -15,7 +15,7 @@ static int device_open(struct inode * inode, struct file * file)
 	if(atomic_cmpxchg(&already_open, CDEV_NOT_USED,CDEV_OPEN))
 		return -EBUSY;
 
-	sprtintf(BUFF, "Module access = %d\n", counter++);  
+	sprintf(BUFF, "Module access = %d\n", counter++);  
 	try_module_get(THIS_MODULE);   
 	return SUCCESS;
 }
@@ -36,7 +36,7 @@ static ssize_t device_read(struct file * flip, char __user * buffer, size_t leng
 		*offset=0;
 		return 0;
 	}
-	BUFF +=*offset;   
+	buff_ptr +=*offset;   
 
 	while(length && *buff_ptr){
 		put_user(*(buff_ptr++), buffer);
