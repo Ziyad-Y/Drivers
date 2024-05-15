@@ -1,8 +1,6 @@
 /*
-
-Implement the Xorshiro128++ algorithm
-see https://prng.di.unimi.it/ for algorithm
-
+*Implement the Xorshiro128++ algorithm
+*see https://prng.di.unimi.it/ PRNG algorithm
 */
 
 #ifdef XORSHIRO128_PP 

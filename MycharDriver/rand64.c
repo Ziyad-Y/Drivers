@@ -4,7 +4,7 @@ MODULE_LICENSE("GPL");
 MODULE_AUTHOR("ME");      
 MODULE_DESCRIPTION("Random 64-bit Number Stream");  
 MODULE_VERSION("0.1");
-
+//----------- Xorshiro128++ ---------------------------//
 static inline u64 rotl(const u64, int k){
 	return (x << k) | (x >> (64-k));
 
@@ -26,13 +26,13 @@ static u64 next(struct xorshiro * xsh){
 
 
 void jump(struct xorshiro * xsh) {
-	static const uint64_t JUMP[] = { 0x2bd7a6a6e99c2ddc, 0x0992ccaf6a6fca05 };
+	static const u64 JUMP[] = { 0x2bd7a6a6e99c2ddc, 0x0992ccaf6a6fca05 };
 
-	uint64_t s0 = 0;
-	uint64_t s1 = 0;
+	u64 s0 = 0;
+	u64 s1 = 0;
 	for(int i = 0; i < sizeof JUMP / sizeof *JUMP; i++)
 		for(int b = 0; b < 64; b++) {
-			if (JUMP[i] & UINT64_C(1) << b) {
+			if (JUMP[i] & ( (u64) 1U<< b)) {
 				s0 ^= xsh->s[0];
 				s1 ^= xsh->s[1];
 			}
@@ -43,6 +43,11 @@ void jump(struct xorshiro * xsh) {
 	xsh->s[1] = s1;
 }
 
+//----------- End Xorshiro ----------------------//
+static atomic_t is_open = ATOMIC_INIT(UNUSED);
+static int device_open(struct inode * inode, struct file * file){
+
+}
 
 static int SEED = 1000;
 static int jump = 0;
