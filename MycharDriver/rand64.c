@@ -54,12 +54,12 @@ static int major;
 static struct class * cls;
 static int SEED = 1000;
 static int j = 0;
+static struct xorshiro x;
 
 module_param(SEED, int, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);   
 MODULE_PARM_DESC(SEED, "Random seed");
 module_param(j, int, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);   
-MODULE_PARM_DESC(jump, "Jump");
-static struct xorshiro x;   
+MODULE_PARM_DESC(jump, "Jump");   
 generator_init(&x, SEED,j);
 
 
@@ -73,7 +73,7 @@ static int device_open(struct inode * inode, struct file * file){
 
 static int device_release(struct inode * inode , struct file * file)
 {
-	atomic_set(&already_open, CDEV_NOT_USED);   
+	atomic_set(&is_open, UNUSED);   
 	module_put(THIS_MODULE);
 	return SUCCESS;
 }
