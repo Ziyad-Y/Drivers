@@ -12,14 +12,14 @@ int main(void){
 		exit(-1);
 	}
 	
-	char buffers [10][20];   
-	struct iovec iov[10];    
+	char buffers [2][20];   
+	struct iovec iov[2];    
 	
-	for(int i =0 ; i< 10; i++){
+	for(int i =0 ; i< 2; i++){
 		iov[i].iov_base = buffers[i];   
 		iov[i].iov_len = sizeof(buffers[i]);
 	}
-	ssize_t bytes_read = readv(fd, iov, 10);
+	ssize_t bytes_read = readv(fd, iov, 2);
 	if(bytes_read == 0){
 		perror("Zero bytes read\n");  
 		exit(-1);
@@ -29,7 +29,7 @@ int main(void){
 		exit(-1);
 	}
 
-	for(int i = 0; i< 10;i++){
+	for(int i = 0; i< 2;i++){
 		printf("%lld\n", strtoull(buffers[i], NULL, 10));
 	}
 	return 0;
