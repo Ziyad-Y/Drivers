@@ -24,7 +24,7 @@ int main(void){
 		perror("ERROR READING FILE or Zero Bytes read\n");
 	}  
 	for(int i=0; i < 5;i++){
-		printf("%0x", strtoull(buffer[i], NULL, 10));
+		printf("%0x\n", strtoull(buffer[i], NULL, 10));
 	} 
 	close(fd);
 
