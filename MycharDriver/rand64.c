@@ -53,14 +53,14 @@ static atomic_t is_open = ATOMIC_INIT(UNUSED);
 static int major;   
 static struct class * cls;
 static int SEED = 1000;
-static int jump = 0;
+static int j = 0;
 
 module_param(SEED, int, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);   
 MODULE_PARM_DESC(SEED, "Random seed");
-module_param(jump, int, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);   
-MODULE_PARM_DESC(jump, "Random seed");
+module_param(j, int, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);   
+MODULE_PARM_DESC(jump, "Jump");
 static struct xorshiro x;   
-generator_init(&x, SEED,jump);
+generator_init(&x, SEED,j);
 
 
 
@@ -100,7 +100,7 @@ static struct file_operations fops = {
 };    
 
 static int __init rand64init(void){
-	major  = register_chrdev(0, DEVICE_NAME,fops );   
+	major  = register_chrdev(0, DEVICE_NAME,&fops );   
 	
 	if(major < 0){
 		pr_alert("REGISTERING RAND64 %d\n", major);  
