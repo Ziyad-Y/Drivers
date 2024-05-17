@@ -5,7 +5,7 @@ MODULE_AUTHOR("ME");
 MODULE_DESCRIPTION("Random 64-bit Number Stream");  
 MODULE_VERSION("0.1");
 //----------- Xorshiro128++ ---------------------------//
-static inline u64 rotl(const u64, int k){
+static inline u64 rotl(const u64 x, int k){
 	return (x << k) | (x >> (64-k));
 }
 
