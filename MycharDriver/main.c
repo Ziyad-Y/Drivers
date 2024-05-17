@@ -11,21 +11,21 @@ int main(void){
 		perror("Failed to read file \n");    
 		exit(-1);
 	}
-	char buffer [20];   
-
-	ssize_t bytes_read = read(fd, buffer, sizeof(buffer));   
-
-	if(bytes_read == 0){
-		perror("Read 0 Bytes\n");  
-		exit(-1);
-	}
-	else if (bytes_read ==-1){
-		perror("Error reading file");
-		exit(-1);
+	char buffer [5][20];
+	struct iovec iov[5];  
+	for(int i =0; i < 5;i++){
+		iov[i].iov_base = buffer[i];  
+		iov[i]. iov_len = sizeof(buffer[i]);
 	}
 
-	printf("Read : %lld\n", strtoull(buffer, NULL, 10));
+	ssize_t bytes_read = readv(fd, iov, 5);
 
+	if(bytes_read ==0 || bytes_read ==-1){
+		perror("ERROR READING FILE or Zero Bytes read\n");
+	}  
+	for(int i=0; i < 5;i++){
+		printf("%0x", strtoull(buffer[i], NULL, 10));
+	} 
 	close(fd);
 
 	return 0;

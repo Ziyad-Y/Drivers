@@ -94,7 +94,6 @@ static ssize_t device_read(struct file * file , char __user * buffer, size_t len
 	if(copy !=0)
 		return -EFAULT;    
 
-	*offset +=l;
 	return l;
 }
 
