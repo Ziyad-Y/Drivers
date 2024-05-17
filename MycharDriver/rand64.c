@@ -78,22 +78,45 @@ static int device_release(struct inode * inode , struct file * file)
 	return SUCCESS;
 }
 
-static ssize_t device_read(struct file * file , char __user * buffer, size_t ,loff_t * offset){
+static ssize_t device_read(struct file * file , char __user * buffer, size_t count ,loff_t * offset){
 	int copy;
 	char random_str [20];   
 	size_t length;
-	u64 random = next(&x);
-	if(x.jump == 1)
-		jump(&x);
-	
-	sprintf(random_str, "%llu\n", random);  
-	length =  strnlen(random_str, 20); 
-	copy = copy_to_user(buffer, random_str, length);
-	if(copy !=0)
-		return -EFAULT;    
-	return length;
-}
+	u64 random;   
+  	loff_t pos = *offset;
 
+    // Move the offset to the end of the file
+    *offset += count;
+
+    while (count > 0) {
+        // Generate a random number
+        random = next(&x);
+        if (x.jump == 1)
+            jump(&x);
+
+        // Convert the random number to a string
+        sprintf(random_str, "%llu\n", random);
+        
+        // Get the length of the string
+        length = strnlen(random_str, 20);
+
+        // Ensure we don't exceed the user buffer size
+        if (length > count)
+            length = count;
+
+        // Copy the random number string to the user buffer
+        copy = copy_to_user(buffer, random_str, length);
+        if (copy != 0)
+            return -EFAULT;
+
+        // Update variables for next iteration
+        buffer += length;
+        count -= length;
+    }
+
+    // Return the number of bytes read
+    return (pos - *offset);
+}
 
 static struct file_operations fops = {
 	.read = device_read,      
