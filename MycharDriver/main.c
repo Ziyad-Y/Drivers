@@ -19,7 +19,7 @@ int main(void){
 		iov[i].iov_base = buffers[i];   
 		iov[i].iov_len = sizeof(buffers[i]);
 	}
-	ssize_t bytes_read = readv(fd, &iov, 10);
+	ssize_t bytes_read = readv(fd, iov, 10);
 	if(bytes_read == 0){
 		perror("Zero bytes read\n");  
 		exit(-1);
