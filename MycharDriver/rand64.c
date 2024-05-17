@@ -60,7 +60,7 @@ module_param(SEED, int, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 MODULE_PARM_DESC(SEED, "Random seed");
 module_param(j, int, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);   
 MODULE_PARM_DESC(jump, "Jump");   
-generator_init(&x, SEED,j);
+
 
 
 
@@ -100,6 +100,7 @@ static struct file_operations fops = {
 };    
 
 static int __init rand64init(void){
+	generator_init(&x, SEED,j);
 	major  = register_chrdev(0, DEVICE_NAME,&fops );   
 	
 	if(major < 0){
