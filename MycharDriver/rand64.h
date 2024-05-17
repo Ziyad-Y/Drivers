@@ -18,13 +18,22 @@
 #include <linux/module.h>   
 #include <linux/printk.h> //print statements
 #include <asm/errno.h>   
-#include "xorshiro.h"   
 #include <linux/moduleparam.h>
 #include <linux/string.h>
 
 #define SUCCESS 0   
 #define DEVICE_NAME "rand64"   
 
+struct xorshiro
+{
+	u64 SEED;
+	u64 s[2];   
+	int jump;
+};
+
+static void generator_init(struct xorshiro* ,u64, int);  
+static u64 next(struct xorshiro *);   
+static void jump(struct xorshiro *);   
 static int device_open(struct inode * , struct file *);   
 static int device_release(struct inode *, struct file *);   
 static ssize_t device_read(struct file * , char __user *, size_t ,loff_t *);
