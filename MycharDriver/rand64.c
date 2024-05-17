@@ -80,10 +80,11 @@ static int device_release(struct inode * inode , struct file * file)
 
 static ssize_t device_read(struct file * file , char __user * buffer, size_t ,loff_t * offset){
 	int copy;
+	char random_str [20];   
 	u64 random = next(&x);
 	if(x.jump == 1)
 		jump(&x);
-	char random_str [20];   
+	
 	sprintf(random_str, "%llu\n", random);  
 	size_t length =  strnlen(random_str, 20); 
 	copy = copy_to_user(buffer, random_str, length);
