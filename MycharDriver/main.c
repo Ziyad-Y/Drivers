@@ -11,26 +11,22 @@ int main(void){
 		perror("Failed to read file \n");    
 		exit(-1);
 	}
-	
-	char buffers [2][20];   
-	struct iovec iov[2];    
-	
-	for(int i =0 ; i< 2; i++){
-		iov[i].iov_base = buffers[i];   
-		iov[i].iov_len = sizeof(buffers[i]);
-	}
-	ssize_t bytes_read = readv(fd, iov, 2);
+	char buffer [20];   
+
+	ssize_t bytes_read = read(fd, buffer, sizeof(buffer));   
+
 	if(bytes_read == 0){
-		perror("Zero bytes read\n");  
+		perror("Read 0 Bytes\n");  
 		exit(-1);
 	}
-	else if(bytes_read == -1){
-		perror("Error reading bytes");
-		exit(-1);
+	else if (bytes_read ==-1){
+		perror("Error reading file");
+		exit(-1)
 	}
 
-	for(int i = 0; i< 2;i++){
-		printf("%lld\n", strtoull(buffers[i], NULL, 10));
-	}
+	printf("Read : %lld\n", strtoull(buffer, NULL, 10));
+
+	close(fd);
+
 	return 0;
 }
