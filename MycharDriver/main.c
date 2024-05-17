@@ -21,7 +21,7 @@ int main(void){
 	}
 	else if (bytes_read ==-1){
 		perror("Error reading file");
-		exit(-1)
+		exit(-1);
 	}
 
 	printf("Read : %lld\n", strtoull(buffer, NULL, 10));
