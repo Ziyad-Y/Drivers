@@ -26,7 +26,7 @@ static u64 next(struct xorshiro * xsh){
 }
 
 
-void jump(struct xorshiro * xsh) {
+static void jump(struct xorshiro * xsh) {
 	static const u64 JUMP[] = { 0x2bd7a6a6e99c2ddc, 0x0992ccaf6a6fca05 };
 
 	u64 s0 = 0;
