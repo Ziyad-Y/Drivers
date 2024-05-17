@@ -7,9 +7,6 @@
 #define XORSHIRO128_PP   
 
 #include <linux/types.h>   
-typedef int __bool;  
-#define True 1   
-#define False 0
 
 
 
@@ -17,10 +14,10 @@ struct xorshiro
 {
 	u64 SEED;
 	u64 s[2];   
-	__bool jump;
+	int jump;
 };
 
-static void generator_init(struct xorshiro* ,u64, __bool);  
+static void generator_init(struct xorshiro* ,u64, int);  
 static u64 next(struct xorshiro *);   
 static void jump(struct xorshiro *);   
 #endif   

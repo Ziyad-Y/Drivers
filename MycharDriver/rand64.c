@@ -9,7 +9,7 @@ static inline u64 rotl(const u64, int k){
 	return (x << k) | (x >> (64-k));
 
 
-static void generator_init(struct xorshiro * xsh, u64 SEED, __bool jump){
+static void generator_init(struct xorshiro * xsh, u64 SEED, int jump){
 	xsh->s[0] = SEED;    
 	xsh->s[1]= 0x02AC45BBF9ULL;   
 	xsh->jump = jump; 
@@ -81,7 +81,7 @@ static int device_release(struct inode * inode , struct file * file)
 static ssize_t device_read(struct file * file , char __user * buffer, size_t ,loff_t * offset){
 	int copy;
 	u64 random = next(&x);
-	if(x->jump == True)
+	if(x->jump == 1)
 		jump(&x);
 	char random_str [20];   
 	sprintf(random_str, "%llu\n", random);  
@@ -121,7 +121,7 @@ static int __init rand64init(void){
 
 static void __exit rand64exit(void){
 	device_destroy(cls,MKDEV(major,0));   
-	class_destroy(csl);
+	class_destroy(cls);
 	unregister_chrdev(major,DEVICE_NAME);
 }
 
