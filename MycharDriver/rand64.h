@@ -20,6 +20,7 @@
 #include <asm/errno.h>   
 #include "xorshiro.h"   
 #include <linux/moduleparam.h>
+#include <linux/string.h>
 
 #define SUCCESS 0   
 #define DEVICE_NAME "rand64"   
@@ -27,8 +28,6 @@
 static int device_open(struct inode * , struct file *);   
 static int device_release(struct inode *, struct file *);   
 static ssize_t device_read(struct file * , char __user *, size_t ,loff_t *);
-static ssize_t device_write(struct file * , const char __user *, size_t ,loff_t *);     
-static unsigned int poll(struct inode *, struct poll_table_struct *); 
 
 enum{
 	UNUSED =0,
