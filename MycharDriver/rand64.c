@@ -44,13 +44,23 @@ void jump(struct xorshiro * xsh) {
 	xsh->s[1] = s1;
 }
 
-static struct xorshiro x;   
-generator_init(&x, SEED,jump);
+
 
 //----------- End Xorshiro ----------------------//
+
+/*-------------------- Begin module--------------*/
 static atomic_t is_open = ATOMIC_INIT(UNUSED);
 static int major;   
+static struct class * cls;
+static int SEED = 1000;
+static int jump = 0;
 
+module_param(SEED, int, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);   
+MODULE_PARM_DESC(SEED, "Random seed");
+module_param(jump, int, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);   
+MODULE_PARM_DESC(jump, "Random seed");
+static struct xorshiro x;   
+generator_init(&x, SEED,jump);
 
 
 
@@ -83,18 +93,38 @@ static ssize_t device_read(struct file * file , char __user * buffer, size_t ,lo
 }
 
 
-static struct file_operations devfops = {
+static struct file_operations fops = {
 	.read = device_read,      
 	.open = device_open,   
 	.release = device_release
 };    
 
-static int SEED = 1000;
-static int jump = 0;
-module_param(SEED, int, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);   
-MODULE_PARM_DESC(SEED, "Random seed");
-module_param(jump, int, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);   
-MODULE_PARM_DESC(jump, "Random seed");
+static int __init rand64init(void){
+	major  = register_chrdev(0, DEVICE_NAME,fops );   
+	
+	if(major < 0){
+		pr_alert("REGISTERING RAND64 %d\n", major);  
+		return major;
+	}
 
+	#if LINUX_VERSION_CODE >= KERNEL_VERSION(6,4,0)
+		cls = class_create(DEVICE_NAME);    
 
+	#else  
+		cls = class_create(THIS_MODULE, DEVICE_NAME);    
+
+	#endif 
+	
+	device_create(cls,NULL, MKDEV(major, 0), NULL, DEVICE_NAME);   
+	return SUCCESS;
+}
+
+static void __exit rand64exit(void){
+	device_destroy(cls,MKDEV(major,0));   
+	class_destroy(csl);
+	unregister_chrdev(major,DEVICE_NAME);
+}
+
+module_init(rand64init);   
+module_exit(rand64exit);
 
