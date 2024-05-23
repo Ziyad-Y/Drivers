@@ -1,5 +1,3 @@
 config PACKT_MYMOD  
-	tristate "Char Driver which generate random numbers"  
-	default m   
-	help 
-		64-bit Number generator stream 
+	tristate "Enable My Module"  
+	default m 
