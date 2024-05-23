@@ -1,7 +1,7 @@
 KDIR := /lib/modules/$(shell uname -r)/build   
 EXTRA_CFLAGS := -Wall -g 
-include Kconfig
-obj-$(CONFIG_PACKT_MYMOD)+= mymod.o 
+
+obj-m += mymod.o 
 mymod-objs := rand64.o 
 
 all: 
