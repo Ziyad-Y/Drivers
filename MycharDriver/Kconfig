@@ -1,0 +1,5 @@
+config PACKT_MYMOD  
+	tristate "MY MPU6050 Driver"  
+	default m   
+	help 
+		Driver for MPU6050 
