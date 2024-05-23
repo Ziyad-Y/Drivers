@@ -1,5 +1,5 @@
 config PACKT_MYMOD  
-	tristate "MY MPU6050 Driver"  
+	tristate "Char Driver which generate random numbers"  
 	default m   
 	help 
-		Driver for MPU6050 
+		64-bit Number generator stream 
