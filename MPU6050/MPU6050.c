@@ -159,7 +159,7 @@ static int __init start(void){
 		}
 
 	#else
-		if(class = class_create(THIS_MODULE, DRIVER_CLASS) == NULL){
+		if(class = class_create(THIS_MODULE, CLASS_NAME) == NULL){
 			pr_info("Cannot create class\n");
 			goto class_error;
 		}
@@ -177,10 +177,10 @@ static int __init start(void){
 		goto Kerror;
 	}
 
-	adapter = i2c_get_adapter(I2C_BUS_AVAILABLE);    
+	adapter = i2c_get_adapter(I2C_BUS);    
 	
 	if( adapter == NULL){
-		client = i2c_new_client_device(adapter, &mpu_board_info);
+		client = i2c_new_client_device(&adapter, &mpu_board_info);
 		if(client == NULL){
 			if(i2c_add_driver(&mpu_driver) < 0){
 				pr_info("Can't add driver\n");
