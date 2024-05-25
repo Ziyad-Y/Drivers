@@ -4,7 +4,7 @@
 dev_t device_num;   					/* device number */ 
 static struct class * class;			/* device class */
 static struct cdev mydev;				/* new character device */
-static s32 * data;						/* data from sensor */
+//static s32 * data;						/* data from sensor */
 
 static struct i2c_adapter *adapter = NULL;					/* Adapter */
 static struct i2c_client * client= NULL;					/* client */
@@ -120,7 +120,7 @@ int read_from_MPU6050(struct i2c_client *mpu6050_client, s32 *data) {
 static ssize_t read_data(struct file * file, char __user * userbuffer, size_t length, loff_t* offset ){
 	int l;
 	char buffer[100]; 
-	data =  kmalloc(6 * sizeof(s32), GFP_KERNEL);
+	s32 data[7];
 	
 	  
 	if(data ==NULL){
@@ -135,11 +135,11 @@ static ssize_t read_data(struct file * file, char __user * userbuffer, size_t le
 	l= strnlen(buffer,90);
 	if(copy_to_user(userbuffer, buffer, l) !=0){
 		pr_info("Failed to copy data from kernel to user\n");  
-		kfree(data); 
+		
 		return -EFAULT;
 		
 	}
-	kfree(data);
+
 	return SUCCESS;
 }
 
