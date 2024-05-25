@@ -153,13 +153,13 @@ static int __init start(void){
 	}
 
 	#if LINUX_VERSION_CODE >= KERNEL_VERSION(6,4,0)
-		if(class = class_create(CLASS_NAME) == NULL){
+		if((class = class_create(CLASS_NAME)) == NULL){
 			pr_info("Cannot create class\n");
 			goto class_error;
 		}
 
 	#else
-		if(class = class_create(THIS_MODULE, CLASS_NAME) == NULL){
+		if((class = class_create(THIS_MODULE, CLASS_NAME)) == NULL){
 			pr_info("Cannot create class\n");
 			goto class_error;
 		}
@@ -188,7 +188,7 @@ static int __init start(void){
 			}
 
 		}
-		i2c_put_adapter(&adapter);
+		i2c_put_adapter(adapter);
 	}
 	return SUCCESS;
 Kerror:  
