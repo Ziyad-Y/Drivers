@@ -123,10 +123,7 @@ static ssize_t read_data(struct file * file, char __user * userbuffer, size_t le
 	s32 data[7];
 	
 	  
-	if(data ==NULL){
-		pr_info("Failed Allocation\n");
-		return -ENOMEM;
-	}
+	
 	if(read_from_MPU6050(client, data) == -EIO){
 		pr_info("read failed\n");
 		return FAILURE;
