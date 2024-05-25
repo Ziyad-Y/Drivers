@@ -33,36 +33,95 @@ void read_from_MPU6050(struct i2c_client *mpu6050_client, s32 *data) {
     
     /* Reading Acceleration */
     accelx_l = i2c_smbus_read_word_data(mpu6050_client, ACCEL_XOUT_L_ADDR);
-    accelx_h = i2c_smbus_read_word_data(mpu6050_client, ACCEL_XOUT_H_ADDR);
+    if(accelx_l < 0){
+    	pr_info("ERROR READING %d\n", accelx_l);
+    	return -EIO;
+    }
+	accelx_h = i2c_smbus_read_word_data(mpu6050_client, ACCEL_XOUT_H_ADDR);
+	if(accelx_h < 0){
+    	pr_info("ERROR READING %d\n", accelx_l);
+    	return -EIO;
+    }
     accely_l = i2c_smbus_read_word_data(mpu6050_client, ACCEL_YOUT_L_ADDR);
+    if(accely_l < 0){
+    	pr_info("ERROR READING %d\n", accely_l);
+    	return -EIO;
+    }
     accely_h = i2c_smbus_read_word_data(mpu6050_client, ACCEL_YOUT_H_ADDR);
+    if(accely_h < 0){
+    	pr_info("ERROR READING %d\n", accely_l);
+    	return -EIO;
+    }
     accelz_l = i2c_smbus_read_word_data(mpu6050_client, ACCEL_ZOUT_L_ADDR);
+    if(accelz_l < 0){
+    	pr_info("ERROR READING %d\n", accelz_l);
+    	return -EIO;
+    }
+
     accelz_h = i2c_smbus_read_word_data(mpu6050_client, ACCEL_ZOUT_H_ADDR);
+    if(accelz_h < 0){
+    	pr_info("ERROR READING %d\n", accelz_l);
+    	return -EIO;
+    }
     data[0] = (accelx_h << 8) | accelx_l;
     data[1] = (accely_h << 8) | accely_l;
     data[2] = (accelz_h << 8) | accelz_l;
 
     /* Reading Gyroscope Data */
     gyrox_l = i2c_smbus_read_word_data(mpu6050_client, GYRO_XOUT_L_ADDR);
+    if(gyrox_l < 0){
+    	pr_info("ERROR READING %d\n", gyrox_l);
+    	return -EIO;
+    }
     gyrox_h = i2c_smbus_read_word_data(mpu6050_client, GYRO_XOUT_H_ADDR);
+    if( gyrox_h< 0){
+    	pr_info("ERROR READING %d\n", gyrox_h);
+    	return -EIO;
+    }
     gyroy_l = i2c_smbus_read_word_data(mpu6050_client, GYRO_YOUT_L_ADDR);
+    if(gyroy_l < 0){
+    	pr_info("ERROR READING %d\n", gyroy_l);
+    	return -EIO;
+    }
     gyroy_h = i2c_smbus_read_word_data(mpu6050_client, GYRO_YOUT_H_ADDR);
+    if( gyroy_h< 0){
+    	pr_info("ERROR READING %d\n", gyroy_h);
+    	return -EIO;
+    }
     gyroz_l = i2c_smbus_read_word_data(mpu6050_client, GYRO_ZOUT_L_ADDR);
+    if(gyroz_l < 0){
+    	pr_info("ERROR READING %d\n", gyroz_l);
+    	return -EIO;
+    }
     gyroz_h = i2c_smbus_read_word_data(mpu6050_client, GYRO_ZOUT_H_ADDR);
+    if( gyroz_h< 0){
+    	pr_info("ERROR READING %d\n", gyroz_h);
+    	return -EIO;
+    }
     data[3] = (gyrox_h << 8) | gyrox_l;
     data[4] = (gyroy_h << 8) | gyroy_l;
     data[5] = (gyroz_h << 8) | gyroz_l;
 
     /* TEMPERATURE */
     tl = i2c_smbus_read_word_data(mpu6050_client, TEMP_OUT_L_ADDR);
+    if(tl < 0){
+    	pr_info("ERROR READING %d\n", tl);
+    	return -EIO;
+    }
     th = i2c_smbus_read_word_data(mpu6050_client, TEMP_OUT_H_ADDR);
+    if( th< 0){
+    	pr_info("ERROR READING %d\n", th);
+    	return -EIO;
+    }
     data[6] = (th << 8) | tl;
+    
 }
 
 static ssize_t read_data(struct file * file, char __user * userbuffer, size_t length, loff_t* offset ){
 	int l;
-	data =  kmalloc(6 * sizeof(s32), GFP_KERNEL);
 	char buffer[100]; 
+	data =  kmalloc(6 * sizeof(s32), GFP_KERNEL);
+	
 	  
 	if(data ==NULL){
 		pr_info("Failed Allocation\n");
