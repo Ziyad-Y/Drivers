@@ -188,7 +188,7 @@ static int __init start(void){
 			}
 
 		}
-		i2c_put_adapter(adapter);
+		i2c_put_adapter(&adapter);
 	}
 	return SUCCESS;
 Kerror:  
