@@ -17,6 +17,7 @@
 #include <linux/slab.h>     
 #include <linux/printk.h>
 #include <asm/errno.h>
+#include <linux/string.h>
 #define SUCCESS 0
 #define FAILURE -1
 /* MPU6050*/ 
