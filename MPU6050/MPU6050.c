@@ -26,7 +26,7 @@ static int mpu_release(struct inode *inode, struct file * file){
 * Each data from the sensor is 2-bytes (signed)   
 * Read both the High and low.
 */
-void read_from_MPU6050(struct i2c_client *mpu6050_client, s32 *data) {
+int read_from_MPU6050(struct i2c_client *mpu6050_client, s32 *data) {
     s32 accelx_l, accelx_h, accely_l, accely_h, accelz_l, accelz_h;
     s32 gyrox_l, gyrox_h, gyroy_l, gyroy_h, gyroz_l, gyroz_h;
     s32 tl, th;
@@ -127,7 +127,10 @@ static ssize_t read_data(struct file * file, char __user * userbuffer, size_t le
 		pr_info("Failed Allocation\n");
 		return -ENOMEM;
 	}
-	read_from_MPU6050(client, data);    
+	if(read_from_MPU6050(client, data) == -EIO){
+		pr_info("read failed\n");
+		return FAILURE;
+	}    
 	snprintf(buffer,sizeof(buffer), "%d,%d,%d,%d,%d,%d,%d", data[0],data[1],data[2],data[3],data[4],data[5],data[6] );
 	l= strnlen(buffer,90);
 	if(copy_to_user(userbuffer, buffer, l) !=0){
