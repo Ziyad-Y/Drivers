@@ -14,45 +14,7 @@ static s32 * data;						/* data from sensor */
 static struct i2c_adapter *adapter = NULL;					/* Adapter */
 static struct i2c_client * client= NULL;					/* client */
 
-/* ---------- Probe the device and Remove device ------------- */
-static int mpu_probe(struct i2c_client *, const struct i2c_device_id *){
-	s32 ret;   
-	if (!i2c_check_functionality(client->adapter,
-								I2C_FUNC_SMBUS_BYTE_DATA))
-			return -EIO; 
 
-	/* Probing addresses to check readibility */
-	pr_info("PROBING DATA ADDRESSES\n");
-
-	ret = i2c_smbus_read_byte_data(client, XTEST);   
-	if(ret < 0){
-		return ret;	
-	}
-
-	ret = i2c_smbus_read_byte_data(client, YTEST);     
-	if(ret < 0){
-		return ret;
-	}
-
-	ret = i2c_smbus_read_byte_data(client, ZTEST);   
-	if(ret < 0){
-		return ret;
-	}
-	
-	/* Write the Full scale select 4g and 1000 deg/s */    
-	if( i2c_smbus_write_byte_data(client, AFS, 0x1 ) < 0)
-		return FAILURE;    
-
-	if(i2c_smbus_write_byte_data(client, AFS, 0x2) < 0)
-		return FAILURE;   
-	
-	return SUCCESS;
-} 
-/*Remove Device*/
-static void mpu_remove(struct i2c_client * client){
-	pr_info("removing module\n");
-	kfree(data);
-} 
 
 /*----------------Handle File operations-------------- */
 static int mpu_open(struct inode * inode, struct file * file){
@@ -116,6 +78,7 @@ static ssize_t read_data(struct file * file, char __user * userbuffer, size_t le
 		return -EFAULT;
 		
 	}
+	kfree(data);
 	return SUCCESS;
 }
 
@@ -139,8 +102,7 @@ static struct i2c_driver mpu_driver = {
 			.name = SLAVE_NAME,  
 			.owner = THIS_MODULE
 		},
-		.probe = mpu_probe,  
-		.remove = mpu_remove
+		
 };
 
 static struct i2c_board_info mpu_board_info = {
