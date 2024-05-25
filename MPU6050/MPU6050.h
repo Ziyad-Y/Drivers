@@ -20,8 +20,8 @@
 #define SUCCESS 0
 #define FAILURE -1
 /* MPU6050*/ 
-#define DRIVER_NAME "i2c_mpu"
-#define CLASS_NAME "mpu_class"
+#define DRIVER_NAME "i2c_mpu6000-A"
+#define CLASS_NAME "MY_I2C"
 #define I2C_BUS 1   					/*I2C bus rawspberry pi (sudo i2cdetect -y 1)*/
 #define SLAVE_NAME "MPU6050"
 #define SLAVE_ADDRESS 0x68  			/* MPU6050 I2C address */     
@@ -61,6 +61,8 @@
 static int mpu_probe(struct i2c_client *, const struct i2c_device_id *);   
 static void mpu_remove(struct i2c_client *);  
 static int mpu_open(struct inode *, struct file *);   
-static void mpu_close(struct client * );
+static void mpu_release(struct inode *, struct file * );   
+static ssize_t read_data(struct file *, char __user *, size_t, loff_t*);   
+
 #endif    
 

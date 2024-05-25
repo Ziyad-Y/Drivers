@@ -6,13 +6,15 @@ MODULE_DESCRIPTION("A driver for MPU6050 6-Axis Acceloremeter and Gyroscope");
 MODULE_SUPPORTED_DEVICE("NONE");
 
 
-dev_t device_num;  
-static struct class * class;
-static struct cdev mydev;
+dev_t device_num;   					/* device number */ 
+static struct class * class;			/* device class */
+static struct cdev mydev;				/* new character device */
+static s32 * data;						/* data from sensor */
 
+static struct i2c_adadpter *adapter = NULL;					/* Adapter */
+static struct i2c_client * client= NULL;					/* client */
 
-
-/* Probe the device */
+/* ---------- Probe the device and Remove device ------------- */
 static int mpu_probe(struct i2c_client *, const struct i2c_device_id *){
 	s32 ret;   
 	if (!i2c_check_functionality(client->adapter,
@@ -46,16 +48,22 @@ static int mpu_probe(struct i2c_client *, const struct i2c_device_id *){
 	
 	return SUCCESS;
 } 
-
+/*Remove Device*/
 static void mpu_remove(struct i2c_client * client){
 	pr_info("removing module\n");
+	kfree(data);
 	return SUCCESS;
 } 
 
-
-/* I2C Device Creation */
-static struct i2c_adadpter mpu6050_adapter = NULL;
-static struct i2c_client * client= NULL;
+/*----------------Handle File operations-------------- */
+static int mpu_open(struct inode * inode, struct file * file){
+	pr_info("Opening Device File\n");  
+	return SUCCESS;
+}
+static int mpu_release(struct inode *, struct file *){
+	pr_info("Closing Device FIle\n");
+	return SUCCESS;
+}
 /* 
 * Read Data
 * Data Sheet : https://cdn.sparkfun.com/datasheets/Sensors/Accelerometers/RM-MPU-6000A.pdf  
@@ -95,4 +103,114 @@ void read_from_MPU6050(struct i2c_client *mpu6050_client, s32 *data) {
     data[6] = (th << 8) | tl;
 }
 
+static ssize_t read_data(struct file * file, char __user * userbuffer, size_t length, loff_t* offset ){
+	data =  kmalloc(6 * sizeof(s32), GFP_KERNEL);   
+	if(data ==NULL){
+		pr_info("Failed Allocation\n");
+		return -ENOMEM;
+	}
+	read_from_MPU6050(client, data);    
 
+	if(copy_to_user(userbuffer,data, 6 * sizeof(s32)) !=0){
+		pr_info("Failed to copy data from kernel to user\n");  
+		kfree(data); 
+		return -EFAULT;
+		
+	}
+	return SUCCESS;
+}
+
+static struct file_operations fops = {
+	.owner = THIS_MODULE,
+	.open = mpu_open,  
+	.release = mpu_release,  
+	.read = read_data
+}
+
+/*-----------------I2C Device Creation---------------------*/
+
+
+static const struct i2c_device_id mpu_id[] = {
+		{SLAVE_NAME, 0},  
+		{}
+};    
+
+static struct i2c_driver mpu_driver = {
+		.driver={
+			.name = SLAVE_NAME,  
+			.owner = THIS_MODULE;
+		}
+		.probe = mpu_probe,  
+		.remove = mpu_remove
+}
+
+static struct i2c_board_info mpu_board_info = {
+	I2C_BOARD_INFO(SLAVE_NAME, SLAVE_ADDRESS);   
+
+};
+
+static int __init start(void){
+	if (alloc_chrdev_region(&device_num, 0, 1, DRIVER_NAME) < 0){
+		pr_info("cannot allocate device number\n");
+	}
+
+	#if LINUX_VERSION_CODE >= KERNEL_VERSION(6,4,0)
+		if(class = class_create(DRIVER_CLASS) == NULL){
+			pr_info("Cannot create class\n");
+			goto class_error;
+		}
+
+	#else
+		if(class = class_create(THIS_MODULE, DRIVER_CLASS) == NULL){
+			pr_info("Cannot create class\n");
+			goto class_error;
+		}
+	#endif
+
+	if(device_create(class, NULL, device_num, NULL, DRIVER_NAME)== NULL){
+		pr_info("error creating file\n");   
+		goto file_error;
+	}
+
+	cdev_init(&mydev, &fops);    
+
+	if(cdev_add(&mydev,device_num, 1) == -1){
+		pr_info("Failed to add device\n");   
+		goto Kerror;
+	}
+
+	adapter = i2c_get_adapter(I2C_BUS_AVAILABLE);    
+	
+	if( adapter == NULL){
+		client = i2c_new_client_device(adapter, &i2c_board_info);
+		if(client == NULL){
+			if(i2c_add_driver(&mpu_driver) < 0){
+				pr_info("Can't add driver\n");
+				return FAILURE;
+			}
+
+		}
+		i2c_put_adapter(adapter);
+	}
+	return SUCCESS;
+Kerror:  
+	device_destroy(class, device_num);   
+file_error:  
+	class_destroy(class);   
+
+class_error:  
+	unregister_chrdev(device_num, DRIVER_NAME);   
+	return FAILURE;
+}
+
+static void __exit end_mod(void){
+	i2c_unregister_device(client);    
+	i2c_del_driver(mpu_driver);   
+	cdev_del(&mydev);
+	device_destroy(class, device_num);
+	class_destroy(class); 
+	unregister_chrdev(device_num, DRIVER_NAME);
+}
+
+module_init(start);  
+module_exit(end_mod);
