@@ -203,7 +203,7 @@ class_error:
 
 static void __exit end_mod(void){
 	i2c_unregister_device(client);    
-	i2c_del_driver(mpu_driver);   
+	i2c_del_driver(&mpu_driver);   
 	cdev_del(&mydev);
 	device_destroy(class, device_num);
 	class_destroy(class); 
