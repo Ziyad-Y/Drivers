@@ -65,14 +65,17 @@ void read_from_MPU6050(struct i2c_client *mpu6050_client, s32 *data) {
 }
 
 static ssize_t read_data(struct file * file, char __user * userbuffer, size_t length, loff_t* offset ){
-	data =  kmalloc(6 * sizeof(s32), GFP_KERNEL);   
+	data =  kmalloc(6 * sizeof(s32), GFP_KERNEL);
+	char buffer[100]; 
+	int l;  
 	if(data ==NULL){
 		pr_info("Failed Allocation\n");
 		return -ENOMEM;
 	}
 	read_from_MPU6050(client, data);    
-
-	if(copy_to_user(userbuffer,data, 6 * sizeof(s32)) !=0){
+	snprintf(buffer,sizeof(buffer), "%d,%d,%d,%d,%d,%d,%d", data[0],data[1],data[2],data[3],data[4],data[5],data[6] );
+	l= strnlen(buffer);
+	if(copy_to_user(userbuffer, buffer, l) !=0){
 		pr_info("Failed to copy data from kernel to user\n");  
 		kfree(data); 
 		return -EFAULT;
