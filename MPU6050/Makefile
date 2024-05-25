@@ -1,7 +1,6 @@
 KDIR := /lib/modules/$(shell uname -r)/build   
 EXTRA_CFLAGS := -Wall -g 
-obj-m  += mymod.o 
-mymod-objs := MPU6050.o 
+obj-m  += MPU6050.o  
 
 
 all: 
