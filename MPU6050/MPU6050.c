@@ -1,10 +1,5 @@
 #include "MPU6050.h"    
 
-MODULE_AUTHOR("Ziyad");
-MODULE_LICENSE("GPL");   
-MODULE_DESCRIPTION("A driver for MPU6050 6-Axis Acceloremeter and Gyroscope");      
-
-
 
 dev_t device_num;   					/* device number */ 
 static struct class * class;			/* device class */
@@ -177,4 +172,10 @@ static void __exit end_mod(void){
 }
 
 module_init(start);  
-module_exit(end_mod);
+module_exit(end_mod);  
+
+
+MODULE_AUTHOR("Ziyad");
+MODULE_LICENSE("GPL");   
+MODULE_DESCRIPTION("A driver for MPU6050 6-Axis Acceloremeter and Gyroscope");      
+
