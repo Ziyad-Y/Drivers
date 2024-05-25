@@ -52,7 +52,6 @@ static int mpu_probe(struct i2c_client *, const struct i2c_device_id *){
 static void mpu_remove(struct i2c_client * client){
 	pr_info("removing module\n");
 	kfree(data);
-	return SUCCESS;
 } 
 
 /*----------------Handle File operations-------------- */
@@ -142,7 +141,7 @@ static struct i2c_driver mpu_driver = {
 		},
 		.probe = mpu_probe,  
 		.remove = mpu_remove
-}
+};
 
 static struct i2c_board_info mpu_board_info = {
 	I2C_BOARD_INFO(SLAVE_NAME, SLAVE_ADDRESS);   
@@ -155,7 +154,7 @@ static int __init start(void){
 	}
 
 	#if LINUX_VERSION_CODE >= KERNEL_VERSION(6,4,0)
-		if(class = class_create(DRIVER_CLASS) == NULL){
+		if(class = class_create(CLASS_NAME) == NULL){
 			pr_info("Cannot create class\n");
 			goto class_error;
 		}
