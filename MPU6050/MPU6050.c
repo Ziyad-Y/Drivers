@@ -11,7 +11,7 @@ static struct class * class;			/* device class */
 static struct cdev mydev;				/* new character device */
 static s32 * data;						/* data from sensor */
 
-static struct i2c_adadpter *adapter = NULL;					/* Adapter */
+static struct i2c_adapter *adapter = NULL;					/* Adapter */
 static struct i2c_client * client= NULL;					/* client */
 
 /* ---------- Probe the device and Remove device ------------- */
