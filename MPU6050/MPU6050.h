@@ -58,9 +58,7 @@
 #define FS 0x1B       
 #define AFS 0x1C   
 
-static int mpu_probe(struct i2c_client *, const struct i2c_device_id *);   
-static void mpu_remove(struct i2c_client *);  
-static int mpu_open(struct inode *, struct file *);   
+static int mpu_probe(struct i2c_client *, const struct i2c_device_id *);     
 static int mpu_release(struct inode *, struct file * );   
 static ssize_t read_data(struct file *, char __user *, size_t, loff_t*);   
 
