@@ -114,7 +114,7 @@ int read_from_MPU6050(struct i2c_client *mpu6050_client, s32 *data) {
     	return -EIO;
     }
     data[6] = (th << 8) | tl;
-    
+    return SUCCESS;
 }
 
 static ssize_t read_data(struct file * file, char __user * userbuffer, size_t length, loff_t* offset ){
