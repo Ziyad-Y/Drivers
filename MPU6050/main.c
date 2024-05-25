@@ -18,7 +18,7 @@ int main(void){
 
 	
 	bytesread = read(fd,buffer, 28);  
-	if(bytesread < 0 | bytesread ==0 )
+	if(bytesread < 0 || bytesread ==0 )
 		exit(-1); 
 	printf("%s\n", buffer);
 	
