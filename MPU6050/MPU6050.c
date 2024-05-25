@@ -26,39 +26,39 @@ static int mpu_release(struct inode *inode, struct file * file){
 * Each data from the sensor is 2-bytes (signed)   
 * Read both the High and low.
 */
-int read_from_MPU6050(struct i2c_client *mpu6050_client, s32 *data) {
+int read_from_MPU6050(s32 *data) {
     s32 accelx_l, accelx_h, accely_l, accely_h, accelz_l, accelz_h;
     s32 gyrox_l, gyrox_h, gyroy_l, gyroy_h, gyroz_l, gyroz_h;
     s32 tl, th;
     
     /* Reading Acceleration */
-    accelx_l = i2c_smbus_read_word_data(mpu6050_client, ACCEL_XOUT_L_ADDR);
+    accelx_l = i2c_smbus_read_word_data(client, ACCEL_XOUT_L_ADDR);
     if(accelx_l < 0){
     	pr_info("ERROR READING %d\n", accelx_l);
     	return -EIO;
     }
-	accelx_h = i2c_smbus_read_word_data(mpu6050_client, ACCEL_XOUT_H_ADDR);
+	accelx_h = i2c_smbus_read_word_data(client, ACCEL_XOUT_H_ADDR);
 	if(accelx_h < 0){
     	pr_info("ERROR READING %d\n", accelx_l);
     	return -EIO;
     }
-    accely_l = i2c_smbus_read_word_data(mpu6050_client, ACCEL_YOUT_L_ADDR);
+    accely_l = i2c_smbus_read_word_data(client, ACCEL_YOUT_L_ADDR);
     if(accely_l < 0){
     	pr_info("ERROR READING %d\n", accely_l);
     	return -EIO;
     }
-    accely_h = i2c_smbus_read_word_data(mpu6050_client, ACCEL_YOUT_H_ADDR);
+    accely_h = i2c_smbus_read_word_data(client, ACCEL_YOUT_H_ADDR);
     if(accely_h < 0){
     	pr_info("ERROR READING %d\n", accely_l);
     	return -EIO;
     }
-    accelz_l = i2c_smbus_read_word_data(mpu6050_client, ACCEL_ZOUT_L_ADDR);
+    accelz_l = i2c_smbus_read_word_data(client, ACCEL_ZOUT_L_ADDR);
     if(accelz_l < 0){
     	pr_info("ERROR READING %d\n", accelz_l);
     	return -EIO;
     }
 
-    accelz_h = i2c_smbus_read_word_data(mpu6050_client, ACCEL_ZOUT_H_ADDR);
+    accelz_h = i2c_smbus_read_word_data(client, ACCEL_ZOUT_H_ADDR);
     if(accelz_h < 0){
     	pr_info("ERROR READING %d\n", accelz_l);
     	return -EIO;
@@ -68,32 +68,32 @@ int read_from_MPU6050(struct i2c_client *mpu6050_client, s32 *data) {
     data[2] = (accelz_h << 8) | accelz_l;
 
     /* Reading Gyroscope Data */
-    gyrox_l = i2c_smbus_read_word_data(mpu6050_client, GYRO_XOUT_L_ADDR);
+    gyrox_l = i2c_smbus_read_word_data(client, GYRO_XOUT_L_ADDR);
     if(gyrox_l < 0){
     	pr_info("ERROR READING %d\n", gyrox_l);
     	return -EIO;
     }
-    gyrox_h = i2c_smbus_read_word_data(mpu6050_client, GYRO_XOUT_H_ADDR);
+    gyrox_h = i2c_smbus_read_word_data(client, GYRO_XOUT_H_ADDR);
     if( gyrox_h< 0){
     	pr_info("ERROR READING %d\n", gyrox_h);
     	return -EIO;
     }
-    gyroy_l = i2c_smbus_read_word_data(mpu6050_client, GYRO_YOUT_L_ADDR);
+    gyroy_l = i2c_smbus_read_word_data(client, GYRO_YOUT_L_ADDR);
     if(gyroy_l < 0){
     	pr_info("ERROR READING %d\n", gyroy_l);
     	return -EIO;
     }
-    gyroy_h = i2c_smbus_read_word_data(mpu6050_client, GYRO_YOUT_H_ADDR);
+    gyroy_h = i2c_smbus_read_word_data(client, GYRO_YOUT_H_ADDR);
     if( gyroy_h< 0){
     	pr_info("ERROR READING %d\n", gyroy_h);
     	return -EIO;
     }
-    gyroz_l = i2c_smbus_read_word_data(mpu6050_client, GYRO_ZOUT_L_ADDR);
+    gyroz_l = i2c_smbus_read_word_data(client, GYRO_ZOUT_L_ADDR);
     if(gyroz_l < 0){
     	pr_info("ERROR READING %d\n", gyroz_l);
     	return -EIO;
     }
-    gyroz_h = i2c_smbus_read_word_data(mpu6050_client, GYRO_ZOUT_H_ADDR);
+    gyroz_h = i2c_smbus_read_word_data(client, GYRO_ZOUT_H_ADDR);
     if( gyroz_h< 0){
     	pr_info("ERROR READING %d\n", gyroz_h);
     	return -EIO;
@@ -103,12 +103,12 @@ int read_from_MPU6050(struct i2c_client *mpu6050_client, s32 *data) {
     data[5] = (gyroz_h << 8) | gyroz_l;
 
     /* TEMPERATURE */
-    tl = i2c_smbus_read_word_data(mpu6050_client, TEMP_OUT_L_ADDR);
+    tl = i2c_smbus_read_word_data(client, TEMP_OUT_L_ADDR);
     if(tl < 0){
     	pr_info("ERROR READING %d\n", tl);
     	return -EIO;
     }
-    th = i2c_smbus_read_word_data(mpu6050_client, TEMP_OUT_H_ADDR);
+    th = i2c_smbus_read_word_data(client, TEMP_OUT_H_ADDR);
     if( th< 0){
     	pr_info("ERROR READING %d\n", th);
     	return -EIO;
@@ -124,7 +124,7 @@ static ssize_t read_data(struct file * file, char __user * userbuffer, size_t le
 	
 	  
 	
-	if(read_from_MPU6050(client, data) == -EIO){
+	if(read_from_MPU6050(data) == -EIO){
 		pr_info("read failed\n");
 		return FAILURE;
 	}    

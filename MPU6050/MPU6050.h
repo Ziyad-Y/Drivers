@@ -27,7 +27,7 @@
 #define SLAVE_NAME "MPU6050"
 #define SLAVE_ADDRESS 0x68  			/* MPU6050 I2C address */     
 /*
-*Data Sheet : https://cdn.sparkfun.com/datasheets/Sensors/Accelerometers/RM-MPU-6000A.pdf
+*Data Sheet : https://cdn.sparkfun.com/datasheets/Sensors/Accelerometers/RM-MPU-6000A. (might be wrong)
 *REGISTER MAPPING
 */
 #define XTEST 0x0D   
@@ -35,22 +35,22 @@
 #define ZTEST 0x0F
 #define ATEST 0x10
 
-#define ACCEL_XOUT_H_ADDR 0x59 
-#define ACCEL_XOUT_L_ADDR 0x60     
-#define ACCEL_YOUT_H_ADDR 0x61   
-#define ACCEL_YOUT_L_ADDR 0x62    
-#define ACCEL_ZOUT_H_ADDR 0x63 
-#define ACCEL_ZOUT_L_ADDR 0x64   
+#define ACCEL_XOUT_H_ADDR 0x3B 
+#define ACCEL_XOUT_L_ADDR 0x3C     
+#define ACCEL_YOUT_H_ADDR 0x3D   
+#define ACCEL_YOUT_L_ADDR 0x3E    
+#define ACCEL_ZOUT_H_ADDR 0x3F 
+#define ACCEL_ZOUT_L_ADDR 0x40   
 
-#define TEMP_OUT_H_ADDR 0x65
-#define TEMP_OUT_L_ADDR 0x66
+#define TEMP_OUT_H_ADDR 0x41
+#define TEMP_OUT_L_ADDR 0x42
 
-#define GYRO_XOUT_H_ADDR 0x67
-#define GYRO_XOUT_L_ADDR 0x68
-#define GYRO_YOUT_H_ADDR 0x69   
-#define GYRO_YOUT_L_ADDR 0x70  
-#define GYRO_ZOUT_H_ADDR 0x71   
-#define GYRO_ZOUT_L_ADDR 0x72
+#define GYRO_XOUT_H_ADDR 0x43
+#define GYRO_XOUT_L_ADDR 0x44
+#define GYRO_YOUT_H_ADDR 0x45   
+#define GYRO_YOUT_L_ADDR 0x46  
+#define GYRO_ZOUT_H_ADDR 0x47   
+#define GYRO_ZOUT_L_ADDR 0x48
 
 /* Full Scale Select Address 
  * AFS +-2g by default   
