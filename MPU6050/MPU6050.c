@@ -3,7 +3,7 @@
 MODULE_AUTHOR("Ziyad");
 MODULE_LICENSE("GPL");   
 MODULE_DESCRIPTION("A driver for MPU6050 6-Axis Acceloremeter and Gyroscope");      
-MODULE_SUPPORTED_DEVICE("NONE");
+
 
 
 dev_t device_num;   					/* device number */ 
@@ -60,7 +60,7 @@ static int mpu_open(struct inode * inode, struct file * file){
 	pr_info("Opening Device File\n");  
 	return SUCCESS;
 }
-static int mpu_release(struct inode *, struct file *){
+static int mpu_release(struct inode *inode, struct file * file){
 	pr_info("Closing Device FIle\n");
 	return SUCCESS;
 }
@@ -125,7 +125,7 @@ static struct file_operations fops = {
 	.open = mpu_open,  
 	.release = mpu_release,  
 	.read = read_data
-}
+};
 
 /*-----------------I2C Device Creation---------------------*/
 
@@ -138,8 +138,8 @@ static const struct i2c_device_id mpu_id[] = {
 static struct i2c_driver mpu_driver = {
 		.driver={
 			.name = SLAVE_NAME,  
-			.owner = THIS_MODULE;
-		}
+			.owner = THIS_MODULE
+		},
 		.probe = mpu_probe,  
 		.remove = mpu_remove
 }
