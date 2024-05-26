@@ -62,10 +62,10 @@ static struct i2c_algorithm myalgo = {
 
 static struct i2c_adapter adapter ={
 	.owner = THIS_MODULE,
-	.name = ADAPTER_NAME
+	.name = ADAPTER_NAME,
 	.class = I2C_CLASS_HWMON,      // I2C_CLASS_SPD
 	.algo = myalgo
-}
+};
 
 
 static int __init driver_init(void){
