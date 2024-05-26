@@ -57,7 +57,7 @@ int16_t read_data(int fd, uint8_t high_address, uint8_t low_address){
 		perror("Failed to read");
 		return -1;
 	}
-	high=buffer[0]
+	high=buffer[0];
 	printf(" read 0x%x 0x%x\n",buffer[0],buffer[1] );  
 	return merge_bytes((int8_t)high, (int8_t)low);
 
