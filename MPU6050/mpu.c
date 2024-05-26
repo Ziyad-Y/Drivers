@@ -4,7 +4,7 @@
 #include <fcntl.h>  
 #include <unistd.h>  
 #include <stdint.h>   
-
+#include <errno.h>
 
 #define ACCEL_XOUT_H_ADDR 0x3B
 #define ACCEL_XOUT_L_ADDR 0x3C
@@ -28,12 +28,12 @@ static inline int16_t merge_bytes(int8_t high, int8_t low){
 } 
 
 int16_t read_data(int fd, uint8_t high_address, uint8_t low_address){
-	int8_t high,low;
+	uint16_t low, high;
 	if(write(fd, &high_address, 1) != 1){
 		perror("Failed to write");
 		return -1;
 	}
-	if(read(fd, &high, sizeof(high)) != sizeof(high)){
+	if(read(fd, &high, 1) != 1 ){
 		perror("Failed to read");
 		return -1;
 	}
@@ -41,7 +41,7 @@ int16_t read_data(int fd, uint8_t high_address, uint8_t low_address){
 		perror("Failed to write");
 		return -1;
 	}
-	if(read(fd, &low, sizeof(low)) != sizeof(low)){
+	if(read(fd, &low, 1) != 1){
 		perror("Failed to read");
 		return -1;
 	}
