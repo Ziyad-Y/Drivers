@@ -23,14 +23,15 @@
 #define GYRO_ZOUT_H_ADDR 0x47
 #define GYRO_ZOUT_L_ADDR 0x48
 
-static inline int16_t merge_bytes(int8_t high, int8_t low){
+static inline int32_t merge_bytes(int8_t high, int8_t low){
 	return (high << 8) | low;
 } 
 
 uint8_t buffer[4];
 
-int16_t read_data(int fd, uint8_t high_address, uint8_t low_address){
+int32_t read_data(int fd, uint8_t high_address, uint8_t low_address){
 	uint8_t low, high;
+
 	buffer[0] = high_address;
 	if(write(fd, buffer, 1) != 1){
 		perror("Failed to write");
@@ -74,7 +75,7 @@ int main(void){
 		return -1;
 	}
 
-	uint16_t data[7];    
+	uint32_t data[7];    
 
 	data[0] = read_data(i2c_bus, ACCEL_XOUT_H_ADDR, ACCEL_XOUT_L_ADDR);   
 	data[1] = read_data(i2c_bus, ACCEL_YOUT_H_ADDR, ACCEL_YOUT_L_ADDR);  
