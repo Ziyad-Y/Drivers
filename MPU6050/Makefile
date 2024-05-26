@@ -1,6 +1,6 @@
 KDIR := /lib/modules/$(shell uname -r)/build   
 EXTRA_CFLAGS := -Wall -g 
-obj-m  += MPU6050.o  
+obj-m  += Myadapter.o  
 
 
 all: 
