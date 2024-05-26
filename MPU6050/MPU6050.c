@@ -85,9 +85,8 @@ static int mpuprobe(struct i2c_client *client) {
     return SUCCESS;
 }
 
-static int mpuremove (struct i2c_client *client){
+static void mpuremove (struct i2c_client *client){
 	pr_info("removing device\n");
-	return SUCCESS;
 }
 
 
