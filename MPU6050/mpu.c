@@ -27,12 +27,12 @@ static inline int16_t merge_bytes(int8_t high, int8_t low){
 	return (high << 8) | low;
 } 
 
-uint8_t buffer[2];
+int8_t buffer[2];
 
 int16_t read_data(int fd, uint8_t high_address, uint8_t low_address){
-	uint8_t low, high;
+	int8_t low, high;
 
-	buffer[0] = high_address;
+	buffer[0] = low_address;
 	printf("Address being read 0x%x\n", buffer[0]);
 	if(write(fd, buffer, 1) != 1){
 		perror("Failed to write");
@@ -43,10 +43,11 @@ int16_t read_data(int fd, uint8_t high_address, uint8_t low_address){
 		perror("Failed to read");
 		return -1;
 	}
-	
+
+	low =buffer[0]
 	printf(" read 0x%x 0x%x\n",buffer[0],buffer[1] );   
 
-	buffer[0]=low_address;
+	buffer[0]=high_address;
 	printf("Address being read 0x%x\n", buffer[0]);
 	if(write(fd, buffer, 1) != 1){
 		perror("Failed to write");
