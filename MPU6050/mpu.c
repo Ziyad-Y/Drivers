@@ -7,65 +7,49 @@
 #include <errno.h>
 
 #define ACCEL_XOUT_H_ADDR 0x3B
-#define ACCEL_XOUT_L_ADDR 0x3C
 #define ACCEL_YOUT_H_ADDR 0x3D
-#define ACCEL_YOUT_L_ADDR 0x3E
 #define ACCEL_ZOUT_H_ADDR 0x3F
-#define ACCEL_ZOUT_L_ADDR 0x40
 
-#define TEMP_OUT_H_ADDR 0x41
-#define TEMP_OUT_L_ADDR 0x42
-
-#define GYRO_XOUT_H_ADDR 0x43
-#define GYRO_XOUT_L_ADDR 0x44
-#define GYRO_YOUT_H_ADDR 0x45
-#define GYRO_YOUT_L_ADDR 0x46
-#define GYRO_ZOUT_H_ADDR 0x47
-#define GYRO_ZOUT_L_ADDR 0x48
-
-static inline int32_t merge_bytes(int8_t high, int8_t low){
-	return (high << 8) | low;
+static inline int16_t merge_bytes(int8_t high, int8_t low){
+    return (high << 8) | low;
 } 
 
-
-
-
-
-
 int main(void){
-	int i2c_bus;   
-	
-	i2c_bus = open("/dev/i2c-1",O_RDWR);   
+    int i2c_bus;   
+    int16_t accel_x, accel_y, accel_z;
+    
+    i2c_bus = open("/dev/i2c-1", O_RDWR);   
 
-	if(i2c_bus < 0){
-		perror("failed to opening bus");   
-		return -1;
-	}
+    if (i2c_bus < 0){
+        perror("failed to open bus");   
+        return -1;
+    }
 
-	if(ioctl(i2c_bus, I2C_SLAVE, 0x68) < 0){
-		perror("error getting slave address");
-		return -1;
-	}
+    if (ioctl(i2c_bus, I2C_SLAVE, 0x68) < 0){
+        perror("error setting slave address");
+        return -1;
+    }
 
-	int8_t data[7];   
+    int8_t data[6]; // We need 6 bytes for X, Y, and Z axes
 
-	data[0]= ACCEL_XOUT_H_ADDR; 
-	if(write(i2c_bus, data, 1) != 1){
-		perror("Failed to write");
-		return -1;
-	}
+    // Reading accelerometer data
+    data[0] = ACCEL_XOUT_H_ADDR; 
+    if (write(i2c_bus, data, 1) != 1){
+        perror("Failed to write");
+        return -1;
+    }
 
-	if(read(i2c_bus, data, 2) != 2 ){
-		perror("Failed to read");
-		return -1;
-	}  
+    if (read(i2c_bus, data, 6) != 6){
+        perror("Failed to read");
+        return -1;
+    }
 
-	printf("data %d %d\n", data[0],data[1]);
+    // Merge high and low bytes for each axis
+    accel_x = merge_bytes(data[0], data[1]);
+    accel_y = merge_bytes(data[2], data[3]);
+    accel_z = merge_bytes(data[4], data[5]);
 
+    printf("Accelerometer data: X=%d, Y=%d, Z=%d\n", accel_x, accel_y, accel_z);
 
-	
-
-
-
-	return 0;
+    return 0;
 }
