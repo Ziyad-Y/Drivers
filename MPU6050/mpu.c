@@ -6,47 +6,88 @@
 #include <stdint.h>   
 #include <errno.h>
 
-#define MPU6050_ADDRESS 0x68
 #define ACCEL_XOUT_H_ADDR 0x3B
+#define ACCEL_XOUT_L_ADDR 0x3C
+#define ACCEL_YOUT_H_ADDR 0x3D
+#define ACCEL_YOUT_L_ADDR 0x3E
+#define ACCEL_ZOUT_H_ADDR 0x3F
+#define ACCEL_ZOUT_L_ADDR 0x40
 
-static inline int16_t merge_bytes(uint8_t high, uint8_t low){
-    return (int16_t)((high << 8) | low);
+#define TEMP_OUT_H_ADDR 0x41
+#define TEMP_OUT_L_ADDR 0x42
+
+#define GYRO_XOUT_H_ADDR 0x43
+#define GYRO_XOUT_L_ADDR 0x44
+#define GYRO_YOUT_H_ADDR 0x45
+#define GYRO_YOUT_L_ADDR 0x46
+#define GYRO_ZOUT_H_ADDR 0x47
+#define GYRO_ZOUT_L_ADDR 0x48
+
+static inline int16_t merge_bytes(int8_t high, int8_t low){
+	return (high << 8) | low;
 } 
 
+uint8_t buffer[2];
+
+int16_t read_data(int fd, uint8_t high_address, uint8_t low_address){
+	uint8_t low, high;
+
+	buffer[0] = high_address;
+	printf("Address being read 0x%x\n", buffer[0]);
+	if(write(fd, buffer, 1) != 1){
+		perror("Failed to write");
+		return -1;
+	}
+
+	if(read(fd, buffer, 2) != 2 ){
+		perror("Failed to read");
+		return -1;
+	}
+	
+	printf(" read 0x%x 0x%x\n",buffer[0],buffer[1] );   
+
+	buffer[0]=low_address;
+	printf("Address being read 0x%x\n", buffer[0]);
+	if(write(fd, buffer, 1) != 1){
+		perror("Failed to write");
+		return -1;
+	}
+	if(read(fd, buffer, 2) != 2){
+		perror("Failed to read");
+		return -1;
+	}
+	printf(" read 0x%x 0x%x\n",buffer[0],buffer[1] );  
+	return merge_bytes((int8_t)high, (int8_t)low);
+
+}
+
+
 int main(void){
-    int i2c_bus;   
-    int16_t accel_x;
-    
-    i2c_bus = open("/dev/i2c-1", O_RDWR);   
+	int i2c_bus;   
+	
+	i2c_bus = open("/dev/i2c-22",O_RDWR);   
 
-    if (i2c_bus < 0){
-        perror("Failed to open bus");   
-        return -1;
-    }
+	if(i2c_bus < 0){
+		perror("failed to opening bus");   
+		return -1;
+	}
 
-    if (ioctl(i2c_bus, I2C_SLAVE, MPU6050_ADDRESS) < 0){
-        perror("Error setting slave address");
-        return -1;
-    }
+	if(ioctl(i2c_bus, I2C_SLAVE, 0x69) < 0){
+		perror("error getting slave address");
+		return -1;
+	}
+	int16_t data[7];   
 
-    uint8_t reg_addr = ACCEL_XOUT_H_ADDR;
-    if (write(i2c_bus, &reg_addr, sizeof(reg_addr)) != sizeof(reg_addr)){
-        perror("Failed to write register address");
-        return -1;
-    }
+	data[0] = read_data(i2c_bus, ACCEL_XOUT_H_ADDR, ACCEL_XOUT_L_ADDR);   
+	printf("Data %d\n",data[0]);
 
-    uint8_t data[2]; // We need 2 bytes for X-axis
 
-    if (read(i2c_bus, data, sizeof(data)) != sizeof(data)){
-        perror("Failed to read data");
-        return -1;
-    }
 
-    accel_x = merge_bytes(data[0], data[1]);
 
-    printf("Accelerometer data (X-axis): %d\n", accel_x);
 
-    close(i2c_bus);
+	
 
-    return 0;
+
+
+	return 0;
 }

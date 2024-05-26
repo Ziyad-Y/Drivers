@@ -21,7 +21,7 @@
 /* MPU6050*/ 
 #define I2C_BUS 22   					/*I2C bus rawspberry pi (sudo i2cdetect -y 1)*/
 #define SLAVE_NAME "MPU6050"
-#define SLAVE_ADDRESS 0x68  			/* MPU6050 I2C address or 0x69 if  */     
+#define SLAVE_ADDRESS 0x69  			/* MPU6050 I2C address or 0x69 if  */     
 /*
 *Data Sheet : https://cdn.sparkfun.com/datasheets/Sensors/Accelerometers/RM-MPU-6000A. (might be wrong) 
 *REGISTER MAPPING
