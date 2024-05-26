@@ -50,12 +50,12 @@ int main(void){
 	uint8_t data[7];   
 
 	data[0]= ACCEL_XOUT_H_ADDR; 
-	if(write(fd, data, 1) != 1){
+	if(write(i2c_bus, data, 1) != 1){
 		perror("Failed to write");
 		return -1;
 	}
 
-	if(read(fd, data, 2) != 2 ){
+	if(read(i2c_bus, data, 2) != 2 ){
 		perror("Failed to read");
 		return -1;
 	}  
