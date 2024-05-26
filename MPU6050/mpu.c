@@ -60,7 +60,7 @@ int main(void){
 		return -1;
 	}  
 
-	printf("data 0x%x 0x%x\n", data[0],data[1]);
+	printf("data %d %d\n", data[0],data[1]);
 
 
 	
