@@ -117,7 +117,7 @@ static struct i2c_board_info mpu_board_info = {
 static int __init mpu_init(void){
 	adapter = i2c_get_adapter(I2C_BUS);   
 	if(adapter != NULL){
-		client = i2c_new_device(adapter, &mpu_board_info);   
+		client = i2c_new_client_device(adapter, &mpu_board_info);   
 		if(client != NULL ){
 			i2c_add_driver(&mpu_driver);
 		}
