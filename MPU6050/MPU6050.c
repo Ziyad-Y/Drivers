@@ -79,7 +79,7 @@ static void read_test_val(void){
 }
 
 static int mpuprobe(struct i2c_client *client) {
-    set_full_scale(FS, 2);
+    set_full_scale(FS, 0);
     set_full_scale(AFS, 1);
     read_test_val();
     return SUCCESS;
