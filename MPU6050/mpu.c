@@ -47,7 +47,7 @@ int main(void){
 		return -1;
 	}
 
-	uint8_t data[7];   
+	int8_t data[7];   
 
 	data[0]= ACCEL_XOUT_H_ADDR; 
 	if(write(i2c_bus, data, 1) != 1){
