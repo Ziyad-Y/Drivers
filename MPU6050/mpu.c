@@ -65,7 +65,7 @@ int16_t read_data(int fd, uint8_t high_address, uint8_t low_address){
 int main(void){
 	int i2c_bus;   
 	
-	i2c_bus = open("/dev/i2c-22",O_RDWR);   
+	i2c_bus = open("/dev/i2c-1",O_RDWR);   
 
 	if(i2c_bus < 0){
 		perror("failed to opening bus");   
