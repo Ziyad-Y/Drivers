@@ -62,7 +62,7 @@ int main(void){
 		return -1;
 	}
 
-	if(ioctl(i2c_bus, I2C_SLAVE, 0x68) < 0){
+	if(ioctl(i2c_bus, I2C_SLAVE, 0x69) < 0){
 		perror("error getting slave address");
 		return -1;
 	}
