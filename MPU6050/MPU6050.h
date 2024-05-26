@@ -34,7 +34,7 @@
 #define ATEST 0x10
 
 
-static int mpuprobe (struct i2c_client *client,const struct i2c_device_id *id);
-static int mpuremove (struct i2c_client *client);
+//static int mpuprobe (struct i2c_client *client,const struct i2c_device_id *id);
+//static int mpuremove (struct i2c_client *client);
 #endif    
 
