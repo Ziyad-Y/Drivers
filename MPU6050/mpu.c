@@ -72,7 +72,7 @@ int main(void){
 		return -1;
 	}
 
-	if(ioctl(i2c_bus, I2C_SLAVE, 0x68) < 0){
+	if(ioctl(i2c_bus, I2C_SLAVE, 0x69) < 0){
 		perror("error getting slave address");
 		return -1;
 	}
@@ -80,14 +80,6 @@ int main(void){
 
 	data[0] = read_data(i2c_bus, ACCEL_XOUT_H_ADDR, ACCEL_XOUT_L_ADDR);   
 	printf("Data %d\n",data[0]);
-
-
-
-
-
-	
-
-
 
 	return 0;
 }
