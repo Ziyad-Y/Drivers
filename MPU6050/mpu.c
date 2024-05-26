@@ -29,40 +29,36 @@ static inline int32_t merge_bytes(int8_t high, int8_t low){
 
 uint8_t buffer[4];
 
-int16_t read_data(int fd, uint8_t high_address, uint8_t low_address) {
-    uint8_t low, high;
+int32_t read_data(int fd, uint8_t high_address, uint8_t low_address){
+	uint8_t low, high;
 
-    // Write high byte address
-    buffer[0] = high_address;
-    if (write(fd, buffer, 1) != 1) {
-        perror("Failed to write");
-        return -1;
-    }
+	buffer[0] = high_address;
+	printf("Address being read 0x%x\n", buffer[0]);
+	if(write(fd, buffer, 1) != 1){
+		perror("Failed to write");
+		return -1;
+	}
 
-    // Read high byte
-    if (read(fd, buffer, 1) != 1) {
-        perror("Failed to read high byte");
-        return -1;
-    }
-    high = buffer[0];
+	if(read(fd, buffer, 2) != 2 ){
+		perror("Failed to read");
+		return -1;
+	}
+	
+	printf(" read 0x%x 0x%x\n",buffer[0],buffer[1] );   
 
-    // Write low byte address
-    buffer[0] = low_address;
-    if (write(fd, buffer, 1) != 1) {
-        perror("Failed to write");
-        return -1;
-    }
+	buffer[0]=low_address;
+	printf("Address being read 0x%x\n", buffer[0]);
+	if(write(fd, buffer, 1) != 1){
+		perror("Failed to write");
+		return -1;
+	}
+	if(read(fd, buffer, 2) != 2){
+		perror("Failed to read");
+		return -1;
+	}
+	printf(" read 0x%x 0x%x\n",buffer[0],buffer[1] );  
+	return merge_bytes(high, low);
 
-    // Read low byte
-    if (read(fd, buffer, 1) != 1) {
-        perror("Failed to read low byte");
-        return -1;
-    }
-    low = buffer[0];
-
-    // Combine high and low bytes with proper endianness
-    int16_t result = (int16_t)((high << 8) | low);
-    return result;
 }
 
 
@@ -83,10 +79,15 @@ int main(void){
 
 	uint32_t data[7];    
 
-	 for (int i = 0; i < 7; i++) {
-        data[i] = read_data(i2c_bus, i * 2 + 0x3B, i * 2 + 0x3C);
-        printf("Raw data[%d]: 0x%x\n", i, data[i]);
-    }
+	data[0] = read_data(i2c_bus, ACCEL_XOUT_H_ADDR, ACCEL_XOUT_L_ADDR);   
+	data[1] = read_data(i2c_bus, ACCEL_YOUT_H_ADDR, ACCEL_YOUT_L_ADDR);  
+	data[2] = read_data(i2c_bus, ACCEL_ZOUT_H_ADDR, ACCEL_ZOUT_L_ADDR);   
+	data[3] = read_data(i2c_bus, GYRO_XOUT_H_ADDR, GYRO_XOUT_L_ADDR);   
+	data[4] = read_data(i2c_bus, GYRO_YOUT_H_ADDR, GYRO_YOUT_L_ADDR);   
+	data[5] = read_data(i2c_bus, GYRO_ZOUT_H_ADDR, GYRO_ZOUT_L_ADDR);
+	data[6] = read_data(i2c_bus, TEMP_OUT_H_ADDR, TEMP_OUT_L_ADDR);   
+
+	printf(" accelx: 0x%x, gyrox 0x%x, temp 0x%x\n", data[0], data[3], data[6]);
 
 
 
