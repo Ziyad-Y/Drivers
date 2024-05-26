@@ -64,7 +64,7 @@ static struct i2c_adapter adapter ={
 	.owner = THIS_MODULE,
 	.name = ADAPTER_NAME,
 	.class = I2C_CLASS_HWMON,      // I2C_CLASS_SPD
-	.algo = myalgo
+	.algo = &myalgo
 };
 
 
