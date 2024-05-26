@@ -49,7 +49,9 @@ int main(void){
     accel_y = merge_bytes(data[2], data[3]);
     accel_z = merge_bytes(data[4], data[5]);
 
-    printf("Accelerometer data: X=%d, Y=%d, Z=%d\n", accel_x, accel_y, accel_z);
+    for (int i = 0; i < 6; ++i) {
+    	printf("Byte %d: %02x\n", i, data[i]);
+	}
 
     return 0;
 }
