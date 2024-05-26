@@ -53,7 +53,7 @@ static int my_smbus_xfer(	struct i2c_adapter *adapter,
 }  
 
 
-static struct i2c_algorithm myalgo {
+static struct i2c_algorithm myalgo = {
 	.master_xfer = my_xfer,   
 	.smbus_xfer = my_smbus_xfer,  
 	.functionality = my_func
