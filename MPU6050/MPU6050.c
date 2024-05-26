@@ -78,13 +78,13 @@ static void read_test_val(void){
 		pr_info("address 0x%x Data 0x%x\n", ZTEST, buf3[1]);
 }
 
-
-static int mpuprobe (struct i2c_client *client,const struct i2c_device_id *id){
-	set_full_scale(FS, 2);   
-	set_full_scale(AFS, 1);    
-	read_test_val();   
-	return SUCCESS;
+static int mpuprobe(struct i2c_client *client, const struct i2c_device_id *id) {
+    set_full_scale(FS, 2);
+    set_full_scale(AFS, 1);
+    read_test_val();
+    return SUCCESS;
 }
+
 static int mpuremove (struct i2c_client *client){
 	pr_info("removing device\n");
 	return SUCCESS;
@@ -111,7 +111,7 @@ static struct i2c_driver mpu_driver = {
 /*Board struct*/
 
 static struct i2c_board_info mpu_board_info = {
-	I2C_BOARD_INFO(SLAVE_NAME, SLAVE_ADDRESS);   
+	I2C_BOARD_INFO(SLAVE_NAME, SLAVE_ADDRESS)   
 };    
 
 static int __init mpu_init(void){
