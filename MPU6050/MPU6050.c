@@ -91,7 +91,7 @@ static int mpuremove (struct i2c_client *client){
 }
 
 
-static onst struct i2c_device_id mpu_id[] = {
+static const struct i2c_device_id mpu_id[] = {
 	{SLAVE_NAME, 0},
 	{}
 };
@@ -101,7 +101,7 @@ MODULE_DEVICE_TABLE(i2c, mpu_id);
 /*Create Driver Struct*/
 static struct i2c_driver mpu_driver = {
 	.driver = {
-		.name - SLAVE_NAME,  
+		.name = SLAVE_NAME,  
 		.owner = THIS_MODULE
 	},
 	.probe = mpuprobe,   
@@ -110,7 +110,7 @@ static struct i2c_driver mpu_driver = {
 };
 /*Board struct*/
 
-static i2c_board_info mpu_board_info = {
+static struct i2c_board_info mpu_board_info = {
 	I2C_BOARD_INFO(SLAVE_NAME, SLAVE_ADDRESS);   
 };    
 
