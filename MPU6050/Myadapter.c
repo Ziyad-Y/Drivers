@@ -89,6 +89,6 @@ module_exit(adapt_exit);
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Ziyad");
-MODULE_DESCRIPTION("BUS Driver for MPu6050");
+MODULE_DESCRIPTION("BUS Driver for MPU6000-A");
 MODULE_VERSION("0.1");      
 
