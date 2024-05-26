@@ -78,7 +78,7 @@ static void read_test_val(void){
 		pr_info("address 0x%x Data 0x%x\n", ZTEST, buf3[1]);
 }
 
-static int mpuprobe(struct i2c_client *client, const struct i2c_device_id *id) {
+static int mpuprobe(struct i2c_client *client) {
     set_full_scale(FS, 2);
     set_full_scale(AFS, 1);
     read_test_val();
