@@ -68,7 +68,7 @@ static struct i2c_adapter adapter ={
 };
 
 
-static int __init driver_init(void){
+static int __init adapt_init(void){
 	int ret;
 	ret = i2c_add_adapter(&adapter);
 
@@ -79,13 +79,13 @@ static int __init driver_init(void){
 	return SUCCESS;
 }
 
-static void __exit driver_exit(void){
+static void __exit adapt_exit(void){
 	i2c_del_adapter(&adapter);
 	pr_info("removed adapter\n");
 }
 
-module_init(driver_init);  
-module_exit(driver_exit);
+module_init(adapt_init);  
+module_exit(adapt_exit);
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Ziyad");
