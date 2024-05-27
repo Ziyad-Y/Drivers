@@ -109,7 +109,7 @@ int main() {
 
 	uint8_t ax_l ,ax_h,ay_l ,ay_h, az_l ,az_h, t_l, t_h, gx_l ,gx_h,gy_l ,gy_h, gz_l ,gz_h;  
 	float accel_x =0;
-	float accel_y =0
+	float accel_y =0;
 	float accel_z =0; 
 	float temp =0;
 	float gyro_x =0;
