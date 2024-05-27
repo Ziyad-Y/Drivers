@@ -40,7 +40,7 @@ int main() {
         exit(1);
     }
     uint8_t buff[1]={0};   
-    uint8_t addr = 0x4A;
+    uint8_t addr = 0x10;
     if(write(fd, &addr, 1)!=1){
     	perror("Failed to write to device");
     	exit(1);
