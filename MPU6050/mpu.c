@@ -34,25 +34,24 @@
 
 
 uint8_t read_data(int fd,uint8_t h_addr){
+	uint8_t buff;
 	
-	uint8_t buff[1];   
-	buff[0] = h_addr;   
-	
-	if(write(fd, buff, 1)!=1){
-		perror("Failed to write");
-		exit(1);
-	}
-	if(read(fd, buff, 1)!=1){
-		perror("Failed to read");
+	if(write(fd, &h_addr, 1) !=1){
+		perror("Failed to write file");
 		exit(1);
 	}
 
-	return buff[0];
+	if( read(fd, &buff, 1)!=1){
+		perror("failed to read\n");
+		exit(-1);
+	}  
+
+	return buff;
 }
 
-void mywrite (int fd ,uint8_t * buff, uint8_t addr, uint8_t val){
-	buff[0]=addr;  
-	buff[1] = val;   
+void mywrite (int fd , uint8_t addr, uint8_t val){
+	uint8_t buff[2] = {add, val};
+
 	if(write(fd, buff, 2)!=2){
 		perror("failed to write");
 		exit(1);
@@ -63,7 +62,6 @@ void mywrite (int fd ,uint8_t * buff, uint8_t addr, uint8_t val){
 
 int main() {
 	int fd;
-   	uint8_t buff[2]; 
 
     // Open the I2C bus
     if ((fd = open("/dev/i2c-1", O_RDWR)) < 0) {
@@ -75,15 +73,13 @@ int main() {
         perror("Failed to Access slave");
         exit(1);
     }
-
-
-   
  
    sleep(1);
 
-   mywrite(fd,buff, FS, (0b00010000 | 0x08));
-   uint8_t d = read_data(fd, FS);
-   printf("%d\n", d);
+   mywrite(fd, FS, 0b00010000 );    
+   uint8_t data = read_data(fd, 0x1B);   
+   printf("data %d", data);
+   
 
     return 0;
 }
