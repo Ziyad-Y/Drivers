@@ -76,9 +76,9 @@ int main() {
  
    sleep(1);
 
-   mywrite(fd, FS, 0b00010000 );    
+   mywrite(fd, FS, 2 );    
    uint8_t data = read_data(fd, 0x1B);   
-   printf("data %d", data);
+   printf("data %d\n", data);
    
 
     return 0;
