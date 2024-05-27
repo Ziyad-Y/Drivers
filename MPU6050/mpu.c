@@ -1,10 +1,12 @@
-#include <linux/i2c-dev.h>  
-#include <stdio.h>  
-#include <sys/ioctl.h>  
-#include <fcntl.h>  
-#include <unistd.h>  
-#include <stdint.h>   
-#include <errno.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <linux/i2c-dev.h>
+
+#define I2C_DEVICE "/dev/i2c-1"
+#define MPU6050_ADDRESS 0x68
 
 #define ACCEL_XOUT_H_ADDR 0x3B
 #define ACCEL_XOUT_L_ADDR 0x3C
@@ -23,65 +25,46 @@
 #define GYRO_ZOUT_H_ADDR 0x47
 #define GYRO_ZOUT_L_ADDR 0x48
 
-static inline int16_t merge_bytes(int8_t high, int8_t low){
-	return (high << 8) | low;
-} 
+int main() {
+    int file;
+    char filename[20];
+    int16_t data;
 
-int8_t buffer[2];
+    // Open the I2C bus
+    sprintf(filename, "%s", I2C_DEVICE);
+    if ((file = open(filename, O_RDWR)) < 0) {
+        perror("Failed to open the i2c bus");
+        return 1;
+    }
 
-int16_t read_data(int fd, uint8_t high_address, uint8_t low_address){
-	int8_t low, high;
+    // Set the I2C slave address
+    if (ioctl(file, I2C_SLAVE, MPU6050_ADDRESS) < 0) {
+        perror("Failed to acquire bus access and/or talk to slave");
+        return 1;
+    }
 
-	buffer[0] = low_address;
-	printf("Address being read 0x%x\n", buffer[0]);
-	if(write(fd, buffer, 1) != 1){
-		perror("Failed to write");
-		return -1;
-	}
+    // Read accelerometer data
+    data = i2c_smbus_read_word_data(file, ACCEL_XOUT_H_ADDR);
+    printf("Accel X: %d\n", data);
+    data = i2c_smbus_read_word_data(file, ACCEL_YOUT_H_ADDR);
+    printf("Accel Y: %d\n", data);
+    data = i2c_smbus_read_word_data(file, ACCEL_ZOUT_H_ADDR);
+    printf("Accel Z: %d\n", data);
 
-	if(read(fd, buffer, 2) != 2 ){
-		perror("Failed to read");
-		return -1;
-	}
+    // Read temperature data
+    data = i2c_smbus_read_word_data(file, TEMP_OUT_H_ADDR);
+    printf("Temperature: %d\n", data);
 
-	low =buffer[0];
-	printf(" read 0x%x 0x%x\n",buffer[0],buffer[1] );   
+    // Read gyroscope data
+    data = i2c_smbus_read_word_data(file, GYRO_XOUT_H_ADDR);
+    printf("Gyro X: %d\n", data);
+    data = i2c_smbus_read_word_data(file, GYRO_YOUT_H_ADDR);
+    printf("Gyro Y: %d\n", data);
+    data = i2c_smbus_read_word_data(file, GYRO_ZOUT_H_ADDR);
+    printf("Gyro Z: %d\n", data);
 
-	buffer[0]=high_address;
-	printf("Address being read 0x%x\n", buffer[0]);
-	if(write(fd, buffer, 1) != 1){
-		perror("Failed to write");
-		return -1;
-	}
-	if(read(fd, buffer, 2) != 2){
-		perror("Failed to read");
-		return -1;
-	}
-	high=buffer[0];
-	printf(" read 0x%x 0x%x\n",buffer[0],buffer[1] );  
-	return merge_bytes((int8_t)high, (int8_t)low);
+    // Close the I2C bus
+    close(file);
 
-}
-
-
-int main(void){
-	int i2c_bus;   
-	
-	i2c_bus = open("/dev/i2c-1",O_RDWR);   
-
-	if(i2c_bus < 0){
-		perror("failed to opening bus");   
-		return -1;
-	}
-
-	if(ioctl(i2c_bus, I2C_SLAVE, 0x68) < 0){
-		perror("error getting slave address");
-		return -1;
-	}
-	int16_t data[7];   
-
-	data[0] = read_data(i2c_bus, ACCEL_XOUT_H_ADDR, ACCEL_XOUT_L_ADDR);   
-	printf("Data %d\n",data[0]);
-
-	return 0;
+    return 0;
 }
