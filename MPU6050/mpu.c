@@ -62,8 +62,8 @@ int main() {
    	perror("FAILED TO READ");
    	exit(1);
    }
-   
 
+   printf("%d %d\n", buff[0],buff[1]);
 
     return 0;
 }
