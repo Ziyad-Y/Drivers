@@ -119,13 +119,15 @@ int main() {
 
 
 	while(FIFO_LEN != 1024){
-		ax_h = i2c_read(ACCEL_XOUT_H);
-		ax_l = i2c_read(ACCEL_XOUT_L);  
-		FIFO_LEN = merger_bytes(ax_l, ax_h);
+		//ax_h = i2c_read(ACCEL_XOUT_H);
+		//ax_l = i2c_read(ACCEL_XOUT_L);  
+		//FIFO_LEN = merger_bytes(ax_l, ax_h);
+		FIFO_LEN = (i2c_read(FIFO_COUNTH) << 8) | (i2c_read(FIFO_COUNTL));
 		if(FIFO_LEN == 1024){
 			i2c_write(USER_CTRL, 0x44);
 			continue;
 		}
+		
 		if(FIFO_LEN >= 14 ){
 			ax_h = i2c_read(FIFO_R_W);
 			ax_l = i2c_read(FIFO_R_W);
