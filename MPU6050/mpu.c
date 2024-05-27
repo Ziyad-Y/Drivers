@@ -81,7 +81,7 @@ int main() {
  
    sleep(1);
 
-   mywrite(fd,buff, FS, 0b00010000);
+   mywrite(fd,buff, FS, (0b00010000 | 0x08));
    uint8_t d = read_data(fd, FS);
    printf("%d\n", d);
 
