@@ -42,7 +42,7 @@ uint8_t read_data(int fd,uint8_t h_addr){
 		perror("Failed to write");
 		exit(1);
 	}
-	if(read(fd, buff, 2)!=2){
+	if(read(fd, buff, 1)!=1){
 		perror("Failed to read");
 		exit(1);
 	}
