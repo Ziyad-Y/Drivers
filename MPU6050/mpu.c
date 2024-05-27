@@ -73,11 +73,11 @@ int main() {
    	perror("fail write");  
    	exit(1);
    } 
-   sleep(5);
+   sleep(1);
    //set FS  
    buff[0]= FS;   
    buff[1]= 0b00010000; //1000 deg/s
-   printf("Address 0%x , FS val %d", buff[0], buff[1]);
+   printf("Address 0%x , FS val %d\n", buff[0], buff[1]);
    if(write(fd, buff,2)!=2){
    	perror("Failed to write");
    	exit(1);
@@ -86,24 +86,24 @@ int main() {
    //set AFS 
    buff[0]= AFS;  
    buff[1] = 0;
-   printf("Address 0%x , AFS val %d", buff[0], buff[1]);
+   printf("Address 0%x , AFS val %d\n", buff[0], buff[1]);
    if(write(fd, buff,2)!=2){
    	perror("Failed to write");
    	exit(1);
    }
 
-   sleep(5);
+   sleep(1);
    
    // enable FIFO  
    buff[0] = FIFO;
    buff[1] = 0b11111000;
-    printf("Address 0%x , FIFO val %d", buff[0], buff[1]);
+    printf("Address 0%x , FIFO val %d\n", buff[0], buff[1]);
    if(write(fd, buff,2)!=2){
    	perror("Failed to write");
    	exit(1);
    }
 
-   sleep(5);
+   sleep(1);
 
    uint16_t data[4];
    data[0] = read_data(fd, ACCEL_XOUT_H_ADDR);   
