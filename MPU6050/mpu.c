@@ -113,7 +113,7 @@ int main() {
 	float accel_z =0; 
 	float temp =0;
 	float gyro_x =0;
-	float gyro_y =0
+	float gyro_y =0;
 	float gyro_z =0;    
 
 	uint16_t FIFO_LEN = 0;  
