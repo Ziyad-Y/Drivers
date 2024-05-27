@@ -49,16 +49,15 @@ int main() {
    	perror("fail write");  
    	exit(1);
    } 
+   sleep(10);
 
-   buff[0] = ACCEL_XOUT_H_ADDR;
-   buff[1] = ACCEL_XOUT_L_ADDR;
-
-   if(read(fd, &buff[0], 1)!=1){
+   buff[0]=ACCEL_XOUT_H_ADDR;
+   if(write(fd, buff, 1)!=1){
    	perror("fail write");
    	exit(1);
    }
 
-   if(read(fd, &buff[1],1)!=1){
+   if(read(fd, buff,2)!=2){
    	perror("FAILED TO READ");
    	exit(1);
    }
