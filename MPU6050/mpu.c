@@ -2,6 +2,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdint.h>
+#include <stdlib.h>
 int main(void){
 	int file;
 	char filename[20];
@@ -24,5 +25,6 @@ int main(void){
 	    exit(3);
 	}
 	// 'val' now contains the read data
+	printf("%d\n", val);
 	return 0;
 }
