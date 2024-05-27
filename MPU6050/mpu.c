@@ -120,28 +120,28 @@ int main() {
 
 
 	while(FIFO_LEN != 1024){
-		ax_h = I2C_read(ACCEL_XOUT_H);
-		ax_l = I2C_read(ACCEL_XOUT_L);  
+		ax_h = i2c_read(ACCEL_XOUT_H);
+		ax_l = i2c_read(ACCEL_XOUT_L);  
 		FIFO_LEN = merger_bytes(ax_l, ax_l);
 		if(FIFO_LEN == 1024){
 			i2c_write(USER_CTRL, 0x44);
 			continue;
 		}
 		if(FIFO_LEN >= 14 ){
-			ax_h = I2C_read(FIFO_R_W);
-			ax_l = I2C_read(FIFO_R_W);
-			ay_h = I2C_read(FIFO_R_W);
-			ay_l = I2C_read(FIFO_R_W);   
-			az_h = I2C_read(FIFO_R_W);
-			az_l = I2C_read(FIFO_R_W);
-			t_h = I2C_read(FIFO_R_W);  
-			t_l = I2C_read(FIFO_R_W);
-			gx_h = I2C_read(FIFO_R_W);
-			gx_l = I2C_read(FIFO_R_W);
-			gy_h = I2C_read(FIFO_R_W);
-			gy_l = I2C_read(FIFO_R_W);
-			gz_h = I2C_read(FIFO_R_W);
-			gz_l = I2C_read(FIFO_R_W);
+			ax_h = i2c_read(FIFO_R_W);
+			ax_l = i2c_read(FIFO_R_W);
+			ay_h = i2c_read(FIFO_R_W);
+			ay_l = i2c_read(FIFO_R_W);   
+			az_h = i2c_read(FIFO_R_W);
+			az_l = i2c_read(FIFO_R_W);
+			t_h = i2c_read(FIFO_R_W);  
+			t_l = i2c_read(FIFO_R_W);
+			gx_h = i2c_read(FIFO_R_W);
+			gx_l = i2c_read(FIFO_R_W);
+			gy_h = i2c_read(FIFO_R_W);
+			gy_l = i2c_read(FIFO_R_W);
+			gz_h = i2c_read(FIFO_R_W);
+			gz_l = i2c_read(FIFO_R_W);
 
 			accel_x = (float)two_complement_to_signed(ax_l, ax_h)/16384;   
 			accel_y = (float) two_complement_to_signed(ay_l, ay_h)/ 16384;  
