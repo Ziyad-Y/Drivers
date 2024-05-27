@@ -1,167 +1,167 @@
-
-#include <linux/i2c-dev.h>
-#include <sys/ioctl.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <unistd.h>
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <sys/stat.h>
+#include <linux/i2c-dev.h>
+#include <sys/types.h>
+#include <stdlib.h>
 #include <stdint.h>
 
-#define MPU6050_I2C_ADDR 0x68
+#define MPU6050_ADDRESS 0x68
+#define CONFIG 0x1A
+#define GYRO_CONFIG 0x1B  
+#define ACCEL_CONFIG 0x1C
+#define FIFO_EN 0x23
+#define USER_CTRL 0x6A
+#define FIFO_COUNTH 0x72
+#define FIFO_COUNTL 0x73   
+#define FIFO_R_W 0x74
+#define WHO_AM_I 0x75
+#define SMPLRT_DIV 0x19
+#define  POWER_MGMT 0x6B
 
-#define REG_ACCEL_ZOUT_H 0x3F
-#define REG_ACCEL_ZOUT_L 0x40
-#define REG_PWR_MGMT_1 0x6B
-#define REG_ACCEL_CONFIG 0x1C
-#define REG_SMPRT_DIV 0x19
-#define REG_CONFIG 0x1A
-#define REG_FIFO_EN 0x23
-#define REG_USER_CTRL 0x6A
-#define REG_FIFO_COUNT_L 0x72
-#define REG_FIFO_COUNT_H 0x73
-#define REG_FIFO 0x74
-#define REG_WHO_AM_I 0x75
+#define ACCEL_XOUT_H 0x3B
+#define ACCEL_XOUT_L 0x3C
+#define ACCEL_YOUT_H 0x3D
+#define ACCEL_YOUT_L 0x3E
+#define ACCEL_ZOUT_H 0x3F
+#define ACCEL_ZOUT_L 0x40
 
-int file = -1;
+#define TEMP_OUT_H 0x41
+#define TEMP_OUT_L 0x42
 
-// Please note, this is not the recommanded way to write data
-// to i2c devices from user space.
-void i2c_write(__u8 reg_address, __u8 val) {
-	char buf[2];
-	if(file < 0) {
-		printf("Error, i2c bus is not available\n");
+#define GYRO_XOUT_H 0x43
+#define GYRO_XOUT_L 0x44
+#define GYRO_YOUT_H 0x45
+#define GYRO_YOUT_L 0x46
+#define GYRO_ZOUT_H 0x47
+#define GYRO_ZOUT_L 0x48
+
+static inline uint16_t merger_bytes(uint8_t low, uint8_t high){
+	return ((0xFF |high ) << 8) | low;
+}
+
+
+int fd = -1;
+
+void i2c_write(uint8_t reg, uint8_t val){
+	uint8_t buf[2];
+
+	if(fd < 0){
+		perror("BUS not available");
 		exit(1);
 	}
-
-	buf[0] = reg_address;
-	buf[1] = val;
-
-	if (write(file, buf, 2) != 2) {
-		printf("Error, unable to write to i2c device\n");
+	buf[0] = reg;   
+	buf[1] = val;   
+	if(write(fd, buf , 2)!=2){
+		perror("Failed to write buffer");
 		exit(1);
 	}
 
 }
 
-// Please note, this is not thre recommanded way to read data
-// from i2c devices from user space.
-char i2c_read(uint8_t reg_address) {
-	char buf[1];
-	if(file < 0) {
-		printf("Error, i2c bus is not available\n");
+uint8_t i2c_read(uint8_t reg){
+	uint8_t buf[1];
+	buf[0] = reg;   
+	if(write(fd, buf, 1) !=1){
+		perror("Failed to write buffer");
 		exit(1);
 	}
-
-	buf[0] = reg_address;
-
-	if (write(file, buf, 1) != 1) {
-		printf("Error, unable to write to i2c device\n");
+	if(read(fd, buf, 1)!=1){
+		perror("read failed");
 		exit(1);
 	}
-
-
-	if (read(file, buf, 1) != 1) {
-		printf("Error, unable to read from i2c device\n");
-		exit(1);
-	}
-
 	return buf[0];
-
 }
 
-uint16_t merge_bytes( uint8_t LSB, uint8_t MSB) {
-	return  (uint16_t) ((( LSB & 0xFF) << 8) | MSB);
-}
-
-// 16 bits data on the MPU6050 are in two registers,
-// encoded in two complement. So we convert those to int16_t
-int16_t two_complement_to_int( uint8_t LSB, uint8_t MSB) {
-	int16_t signed_int = 0;
-	uint16_t word;
-
-	word = merge_bytes(LSB, MSB);
-
-	if((word & 0x8000) == 0x8000) { // negative number
-		signed_int = (int16_t) -(~word);
-	} else {
-		signed_int = (int16_t) (word & 0x7fff);
+int16_t two_complement_to_signed (uint8_t low, uint8_t high){
+	uint16_t data = merger_bytes(low, high);   
+	if(data & 0x8000){
+		return -(int16_t)(~data +1);
 	}
-
-	return signed_int;
+	else{
+		return data;
+	}
 }
 
-int main(int argc, char *argv[]) {
-	int adapter_nr = 1; /* probably dynamically determined */
-	char bus_filename[250];
-	char accel_x_h,accel_x_l,accel_y_h,accel_y_l,accel_z_h,accel_z_l,temp_h,temp_l;
-	uint16_t fifo_len = 0;
-	int16_t x_accel = 0;
-	int16_t y_accel = 0;
-	int16_t z_accel = 0;
-	int16_t temp = 0;
-	float x_accel_g, y_accel_g, z_accel_g, temp_f;
+int main() {
 
-	snprintf(bus_filename, 250, "/dev/i2c-1", adapter_nr);
-	file = open(bus_filename, O_RDWR);
-	if (file < 0) {
-		/* ERROR HANDLING; you can check errno to see what went wrong */
+	fd = open("/dev/i2c-1", O_RDWR);   
+	if(fd < 0){
+		perror("Failed to access bus\n");
 		exit(1);
 	}
-
-
-	if (ioctl(file, I2C_SLAVE, MPU6050_I2C_ADDR) < 0) {
-		/* ERROR HANDLING; you can check errno to see what went wrong */
-		exit(1);
+	
+	if(ioctl(fd, I2C_SLAVE, MPU6050_ADDRESS) < 0){
+		perror("Failed to detect device");
+		exit(-1);
 	}
 
-	i2c_write(REG_PWR_MGMT_1, 0x01);
-	i2c_write(REG_ACCEL_CONFIG, 0x00);
-	i2c_write(REG_SMPRT_DIV, 0x07);
-	i2c_write(REG_CONFIG, 0x00);
-	i2c_write(REG_FIFO_EN, 0x88);
-	i2c_write(REG_USER_CTRL, 0x44);
+	i2c_write(PWR, 0x01);
+	i2c_write(ACCEL_CONFIG, 0x00);
+	i2c_write(GYRO_CONFIG, 0x10);
+	i2c_write(CONFIG, 0x00);
+	i2c_write(SMPLRT_DIV, 0x07);
+	i2c_write(FIFO_EN,0xF8 ); 
+	i2c_write(USER_CTRL, 0x44);
 
-	while(fifo_len != 1024) {
-		accel_x_h = i2c_read(REG_FIFO_COUNT_L);
-		accel_x_l = i2c_read(REG_FIFO_COUNT_H);
-		fifo_len = merge_bytes(accel_x_h,accel_x_l);
+	uint8_t ax_l ,ax_h,ay_l ,ay_h, az_l ,az_h, t_l, t_h, gx_l ,gx_h,gy_l ,gy_h, gz_l ,gz_h;  
+	float accel_x =0;
+	float accel_y =0
+	float accel_z =0; 
+	float temp =0;
+	float gyro_x =0;
+	float gyro_y =0
+	float gyro_z =0;    
 
-		if(fifo_len == 1024) {
-			printf("fifo overflow !\n");
-			i2c_write(REG_USER_CTRL, 0x44);
+	uint16_t FIFO_LEN = 0;  
+
+
+	while(FIFO_LEN != 1024){
+		ax_h = I2C_read(ACCEL_XOUT_H);
+		ax_l = I2C_read(ACCEL_XOUT_L);  
+		FIFO_LEN = merger_bytes(ax_l, ax_l);
+		if(FIFO_LEN == 1024){
+			i2c_write(USER_CTRL, 0x44);
 			continue;
 		}
+		if(FIFO_LEN >= 14 ){
+			ax_h = I2C_read(FIFO_R_W);
+			ax_l = I2C_read(FIFO_R_W);
+			ay_h = I2C_read(FIFO_R_W);
+			ay_l = I2C_read(FIFO_R_W);   
+			az_h = I2C_read(FIFO_R_W);
+			az_l = I2C_read(FIFO_R_W);
+			t_h = I2C_read(FIFO_R_W);  
+			t_l = I2C_read(FIFO_R_W);
+			gx_h = I2C_read(FIFO_R_W);
+			gx_l = I2C_read(FIFO_R_W);
+			gy_h = I2C_read(FIFO_R_W);
+			gy_l = I2C_read(FIFO_R_W);
+			gz_h = I2C_read(FIFO_R_W);
+			gz_l = I2C_read(FIFO_R_W);
 
-		if(fifo_len >= 8) {
-			accel_x_h = i2c_read(REG_FIFO);
-			accel_x_l = i2c_read(REG_FIFO);
-			accel_y_h = i2c_read(REG_FIFO);
-			accel_y_l = i2c_read(REG_FIFO);
-			accel_z_h = i2c_read(REG_FIFO);
-			accel_z_l = i2c_read(REG_FIFO);
-			temp_h = i2c_read(REG_FIFO);
-			temp_l= i2c_read(REG_FIFO);
+			accel_x = (float)two_complement_to_signed(ax_l, ax_h)/16384;   
+			accel_y = (float) two_complement_to_signed(ay_l, ay_h)/ 16384;  
+			accel_z = (float)two_complement_to_signed(az_l, az_l)/16384;    
+			gyro_x =  two_complement_to_signed(gx_l, gx_h)/32.8;   
+			gyro_y = two_complement_to_signed(gy_l, gy_h)/32.8;
+			gyro_z = two_complement_to_signed(gz_l, gz_h)/32.8;   
+			temp = two_complement_to_signed(t_l,t_h)/340.0 + 35;  
 
-			x_accel= two_complement_to_int(accel_x_h,accel_x_l);
-			x_accel_g = ((float) x_accel)/16384;
-
-			y_accel= two_complement_to_int(accel_y_h,accel_y_l);
-			y_accel_g = ((float) y_accel)/16384;
-
-			z_accel= two_complement_to_int(accel_z_h,accel_z_l);
-			z_accel_g = ((float) z_accel)/16384;
-
-			temp = two_complement_to_int(temp_h, temp_l);
-			temp_f = (float)temp/340 + 36.53; // calculated as described in the MPU60%) register map document
-
-			printf("x_accel %.3fg	y_accel %.3fg	z_accel %.3fg	temp=%.1fc         \r", x_accel_g, y_accel_g, z_accel_g, temp_f);
-		} else {
+			printf(" Accel x: %3f, Accel y: %3f, Accel z: %3f\n Gyro x: %3f, Gyro y: %f, Gyro z:%3f\n Temp %3f",
+				accel_x,accel_y,accel_z,gyro_x,gyro_y,gyro_z,temp);
+		}
+		else{
 			usleep(10000);
 		}
+	}  
 
-	}
 
-	return 0;
+
+
+
+    return 0;
 }
