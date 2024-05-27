@@ -35,7 +35,7 @@ int main() {
         exit(1);
     }
 
-    if (ioctl(file, I2C_SLAVE, MPU6050_ADDRESS) < 0) {
+    if (ioctl(fd, I2C_SLAVE, MPU6050_ADDRESS) < 0) {
         perror("Failed to Access slave");
         exit(1);
     }
