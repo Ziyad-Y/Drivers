@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-#define MPU6050_ADDRESS 0x68
+#define MPU6050_ADDRESS 0x69
 #define CONFIG 0x1A
 #define GYRO_CONFIG 0x1B  
 #define ACCEL_CONFIG 0x1C
