@@ -32,13 +32,12 @@
 #define GYRO_ZOUT_H_ADDR 0x47
 #define GYRO_ZOUT_L_ADDR 0x48
 
-static inline int16_t merge_bytes(uint8_t high, uint8_t low){
-	return (high << 8) | low;
-}
 
-uint32_t read_data(int fd,uint8_t h_addr){
-	uint8_t buff[2];   
+uint8_t read_data(int fd,uint8_t h_addr){
+	
+	uint8_t buff[1];   
 	buff[0] = h_addr;   
+	
 	if(write(fd, buff, 1)!=1){
 		perror("Failed to write");
 		exit(1);
@@ -48,9 +47,19 @@ uint32_t read_data(int fd,uint8_t h_addr){
 		exit(1);
 	}
 
-	printf("%d %d", buff[0], buff[1]);   
-	return merge_bytes(buff[0], buff[1]);
+	return buff[0];
 }
+
+void mywrite (int fd ,uint8_t buff, uint8_t addr, uint8_t val){
+	buff[0]=addr;  
+	buff[1] = val;   
+	if(write(fd, buff, 2)!=2){
+		perror("failed to write");
+		exit(1);
+	}
+
+}
+
 
 int main() {
 	int fd;
@@ -66,41 +75,15 @@ int main() {
         perror("Failed to Access slave");
         exit(1);
     }
-   //reset device
-   buff[0] = RESET_DEVICE_ADDR;   
-   buff[1] = RESET_DEVICE_VAL;
-   if(write(fd, buff, 2)!=2){
-   	perror("fail write");  
-   	exit(1);
-   } 
-   sleep(1);
-   //set FS  
-   buff[0]= FS;   
-   buff[1]= 0b00010000; //1000 deg/s
-   printf("Address 0%x , FS val %d\n", buff[0], buff[1]);
-   if(write(fd, buff,2)!=2){
-   	perror("Failed to write");
-   	exit(1);
-   }
 
-   //set AFS 
-   buff[0]= AFS;  
-   buff[1] = 0;
-   printf("Address 0%x , AFS val %d\n", buff[0], buff[1]);
-   if(write(fd, buff,2)!=2){
-   	perror("Failed to write");
-   	exit(1);
-   }
 
+   
  
    sleep(1);
 
-   uint16_t data[4];
-   data[0] = read_data(fd, 0x43);   
-   data[1] = read_data(fd, GYRO_YOUT_H_ADDR); 
-   data[2] = read_data(fd, GYRO_ZOUT_H_ADDR);
-
-   printf("%d %d %d\n", data[0], data[1], data[2]);
+   mywrite(fd,buff, FS, 0b10);
+   uint8_t d = read_data(fd, FS);
+   printf("%d\n", d);
 
     return 0;
 }
