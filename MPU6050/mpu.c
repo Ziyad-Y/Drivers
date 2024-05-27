@@ -39,18 +39,18 @@ int main() {
         perror("Failed to Access slave");
         exit(1);
     }
-    uint8_t buff[2];   
+    uint8_t buff[2]={0};   
     uint8_t addr = ACCEL_XOUT_H_ADDR;
     if(write(fd, &addr, 1)!=1){
     	perror("Failed to write to device");
     	exit(1);
     }
-    
+
    if(read(fd, buff, 2)!=2){
    	perror("Failed to read");
    	exit(1);
    }
-   printf("%d\n", buff[0],buff[1]);
+   printf("%d %d\n", buff[0],buff[1]);
 
     return 0;
 }
