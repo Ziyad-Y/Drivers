@@ -30,7 +30,7 @@ int main() {
     
 
     // Open the I2C bus
-    if ((fd = open("/dev/i2c-1", O_RDWR)) < 0) {
+    if ((fd = open("/dev/i2c-20", O_RDWR)) < 0) {
         perror("Failed to open the bus.");
         exit(1);
     }
@@ -39,7 +39,12 @@ int main() {
         perror("Failed to Access slave");
         exit(1);
     }
-    uint8_t buff[7]={0};   
+    uint8_t buff[2]={0};   
+    uint8_t addr = ACCEL_XOUT_H_ADDR;
+    if(write(fd, &addr, 1)!=1){
+    	perror("Failed to write to device");
+    	exit(1);
+    }
 
    if(read(fd, buff, 2)!=2){
    	perror("Failed to read");
