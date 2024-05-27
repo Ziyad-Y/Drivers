@@ -106,9 +106,9 @@ int main() {
    sleep(1);
 
    uint16_t data[4];
-   data[0] = read_data(fd, ACCEL_XOUT_H_ADDR);   
-   data[1] = read_data(fd, ACCEL_YOUT_H_ADDR); 
-   data[2] = read_data(fd, ACCEL_ZOUT_H_ADDR);
+   data[0] = read_data(fd, 0x0D);   
+   data[1] = read_data(fd, 0x0E); 
+   data[2] = read_data(fd, 0x0F);
 
    printf("%d %d %d\n", data[0], data[1], data[2]);
 
