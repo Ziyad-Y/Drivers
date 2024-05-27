@@ -36,7 +36,7 @@ static inline int16_t merge_bytes(uint8_t high, uint8_t low){
 	return (high << 8) | low;
 }
 
-uint16_t read_data(int fd,uint8_t h_addr){
+uint32_t read_data(int fd,uint8_t h_addr){
 	uint8_t buff[2];   
 	buff[0] = h_addr;   
 	if(write(fd, buff, 1)!=1){
