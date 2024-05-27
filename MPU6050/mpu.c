@@ -96,7 +96,7 @@ int main() {
    sleep(1);
 
    uint16_t data[4];
-   data[0] = read_data(fd, GYRO_XOUT_H_ADDR);   
+   data[0] = read_data(fd, 0x43);   
    data[1] = read_data(fd, GYRO_YOUT_H_ADDR); 
    data[2] = read_data(fd, GYRO_ZOUT_H_ADDR);
 
