@@ -120,7 +120,7 @@ int main() {
 
 	while(FIFO_LEN != 1024){
 		
-		FIFO_LEN = merger_bytes((i2c_read(FIFO_COUNTL) , i2c_read(FIFO_COUNTH) );
+		FIFO_LEN = merger_bytes(i2c_read(FIFO_COUNTL) , i2c_read(FIFO_COUNTH) );
 		printf("FIFO LEN = %d\n", FIFO_LEN);
 		if(FIFO_LEN == 1024){
 			i2c_write(USER_CTRL, 0x44);
