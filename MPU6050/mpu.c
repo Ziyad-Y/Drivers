@@ -8,6 +8,9 @@
 
 #define MPU6050_ADDRESS 0x68
 
+#define RESET_DEVICE_VAL 0x80  
+#define RESET_DEVICE_ADDR 0x6B
+
 #define ACCEL_XOUT_H_ADDR 0x3B
 #define ACCEL_XOUT_L_ADDR 0x3C
 #define ACCEL_YOUT_H_ADDR 0x3D
@@ -27,7 +30,7 @@
 
 int main() {
 	int fd;
-    
+   	uint8_t buff[2]; 
 
     // Open the I2C bus
     if ((fd = open("/dev/i2c-1", O_RDWR)) < 0) {
@@ -39,19 +42,28 @@ int main() {
         perror("Failed to Access slave");
         exit(1);
     }
-    uint8_t buff[1]={0};   
-    uint8_t addr = 0x10;
-    if(write(fd, &addr, 1)!=1){
-    	perror("Failed to write to device");
-    	exit(1);
-    }
+   buff[0] = RESET_DEVICE_ADDR;   
+   buff[1] = RESET_DEVICE_VAL;
 
-   if(read(fd, buff, 1)!=1){
-   	perror("Failed to read");
+   if(write(fd, buff, 2)!=2){
+   	perror("fail write");  
+   	exit(1);
+   } 
+
+   buff[0] = ACCEL_XOUT_H_ADDR;
+   buff[1] = ACCEL_XOUT_L_ADDR;
+
+   if(read(fd, &buff[0], 1)!=1){
+   	perror("fail write");
    	exit(1);
    }
-   printf("%d %d\n", buff[0],buff[1]);
 
-   close(fd);
+   if(read(fd, &buff[1],1)!=1){
+   	perror("FAILED TO READ");
+   	exit(1);
+   }
+   
+
+
     return 0;
 }
