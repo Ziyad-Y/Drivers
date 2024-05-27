@@ -7,7 +7,7 @@
 
 int main(void){
 	int file;
-	char filename[20]="/dev/i2c-1"
+	char filename[20]="/dev/i2c-1";
 	int addr = 0x68; // I2C address of the MPU
 	uint16_t dataAddr = 0x3B; // Data address to read from
 	uint8_t val;
