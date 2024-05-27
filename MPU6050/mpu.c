@@ -50,7 +50,7 @@ uint8_t read_data(int fd,uint8_t h_addr){
 }
 
 void mywrite (int fd , uint8_t addr, uint8_t val){
-	uint8_t buff[2] = {add, val};
+	uint8_t buff[2] = {addr, val};
 
 	if(write(fd, buff, 2)!=2){
 		perror("failed to write");
