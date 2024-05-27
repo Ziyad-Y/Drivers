@@ -99,7 +99,7 @@ int main() {
 		exit(-1);
 	}
 
-	i2c_write(PWR, 0x01);
+	i2c_write(POWER_MGMT, 0x01);
 	i2c_write(ACCEL_CONFIG, 0x00);
 	i2c_write(GYRO_CONFIG, 0x10);
 	i2c_write(CONFIG, 0x00);
