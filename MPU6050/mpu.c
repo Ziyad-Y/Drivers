@@ -47,7 +47,7 @@ int main() {
     }
    if(read(fd, buff, 1)!=1){
    	perror("Failed to read");
-   	exit(1)
+   	exit(1);
    }
    printf("%d\n", buff[0]);
 
