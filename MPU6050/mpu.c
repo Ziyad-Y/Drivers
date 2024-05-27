@@ -92,23 +92,13 @@ int main() {
    	exit(1);
    }
 
-   sleep(1);
-   
-   // enable FIFO  
-   buff[0] = FIFO;
-   buff[1] = 0b11111000;
-    printf("Address 0%x , FIFO val %d\n", buff[0], buff[1]);
-   if(write(fd, buff,2)!=2){
-   	perror("Failed to write");
-   	exit(1);
-   }
-
+ 
    sleep(1);
 
    uint16_t data[4];
-   data[0] = read_data(fd, 0x0D);   
-   data[1] = read_data(fd, 0x0E); 
-   data[2] = read_data(fd, 0x0F);
+   data[0] = read_data(fd, GYRO_XOUT_H_ADDR);   
+   data[1] = read_data(fd, GYRO_YOUT_H_ADDR); 
+   data[2] = read_data(fd, GYRO_ZOUT_H_ADDR);
 
    printf("%d %d %d\n", data[0], data[1], data[2]);
 
