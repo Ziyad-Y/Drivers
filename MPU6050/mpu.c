@@ -145,9 +145,9 @@ int main() {
 			accel_x = (float)two_complement_to_signed(ax_l, ax_h)/16384*9.8;   
 			accel_y = (float) two_complement_to_signed(ay_l, ay_h)/ 16384 * 9.8;  
 			accel_z = (float)two_complement_to_signed(az_l, az_h)/16384 * 9.8;    
-			gyro_x =  two_complement_to_signed(gx_l, gx_h)/131;   
-			gyro_y = two_complement_to_signed(gy_l, gy_h)/131;
-			gyro_z = two_complement_to_signed(gz_l, gz_h)/131;   
+			gyro_x =  two_complement_to_signed(gx_l, gx_h)/65.5;   
+			gyro_y = two_complement_to_signed(gy_l, gy_h)/65.5;
+			gyro_z = two_complement_to_signed(gz_l, gz_h)/65.5;   
 			temp = two_complement_to_signed(t_l,t_h)/340.0 + 36.53;  
 
 			printf(" Accel x: %3f, Accel y: %3f, Accel z: %3f\n Gyro x: %3f, Gyro y: %f, Gyro z:%3f\n Temp %3f",
