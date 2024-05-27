@@ -40,11 +40,12 @@ int main() {
         exit(1);
     }
     uint8_t buff[2];   
-    
-    if(write(fd, &ACCEL_XOUT_H_ADDR, 1)!=1){
+    uint8_t addr = ACCEL_XOUT_H_ADDR;
+    if(write(fd, &addr, 1)!=1){
     	perror("Failed to write to device");
     	exit(1);
     }
+    
    if(read(fd, buff, 2)!=2){
    	perror("Failed to read");
    	exit(1);
