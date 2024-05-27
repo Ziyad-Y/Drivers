@@ -100,7 +100,7 @@ int main() {
 
 	i2c_write(POWER_MGMT, 0x01);
 	i2c_write(ACCEL_CONFIG, 0x00);
-	i2c_write(GYRO_CONFIG, 0x00);
+	i2c_write(GYRO_CONFIG, 0x08);
 	i2c_write(CONFIG, 0x00);
 	i2c_write(SMPLRT_DIV, 0x07);
 	i2c_write(FIFO_EN,0xF8 ); 
