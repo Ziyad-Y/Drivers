@@ -4,14 +4,15 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
+
 int main(void){
 	int file;
-	char filename[20];
+	char filename[20]="/dev/i2c-1"
 	int addr = 0x68; // I2C address of the MPU
 	uint16_t dataAddr = 0x3B; // Data address to read from
 	uint8_t val;
 	
-	sprintf(filename, "/dev/i2c-%d", 0); // Use the appropriate I2C bus number
+	
 	if ((file = open(filename, O_RDWR)) < 0)
 	    exit(1);
 	
