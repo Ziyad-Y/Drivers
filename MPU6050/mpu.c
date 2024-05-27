@@ -50,7 +50,7 @@ uint8_t read_data(int fd,uint8_t h_addr){
 	return buff[0];
 }
 
-void mywrite (int fd ,uint8_t buff, uint8_t addr, uint8_t val){
+void mywrite (int fd ,uint8_t * buff, uint8_t addr, uint8_t val){
 	buff[0]=addr;  
 	buff[1] = val;   
 	if(write(fd, buff, 2)!=2){
