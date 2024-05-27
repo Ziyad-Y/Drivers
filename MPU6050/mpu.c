@@ -30,7 +30,7 @@ int main() {
     
 
     // Open the I2C bus
-    if ((fd = open("/dev/i2c-20", O_RDWR)) < 0) {
+    if ((fd = open("/dev/i2c-21", O_RDWR)) < 0) {
         perror("Failed to open the bus.");
         exit(1);
     }
