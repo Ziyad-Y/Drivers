@@ -39,14 +39,14 @@ int main() {
         perror("Failed to Access slave");
         exit(1);
     }
-    uint8_t buff[2]={0};   
+    uint8_t buff[1]={0};   
     uint8_t addr = 0x4A;
     if(write(fd, &addr, 1)!=1){
     	perror("Failed to write to device");
     	exit(1);
     }
 
-   if(read(fd, buff, 2)!=2){
+   if(read(fd, buff, 1)!=1){
    	perror("Failed to read");
    	exit(1);
    }
