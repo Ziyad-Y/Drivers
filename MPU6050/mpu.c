@@ -10,6 +10,7 @@
 
 #define FS 0x1B  
 #define AFS 0x1C
+#define FIFO 0x23
 
 #define RESET_DEVICE_VAL 0x80  
 #define RESET_DEVICE_ADDR 0x6B
@@ -78,6 +79,7 @@ int main() {
    buff[1]= 0b00010000; //1000 deg/s
    if(write(fd, buff,2)!=2){
    	perror("Failed to write");
+   	exit(1);
    }
 
    //set AFS 
@@ -85,6 +87,18 @@ int main() {
    buff[1] = 0;
    if(write(fd, buff,2)!=2){
    	perror("Failed to write");
+   	exit(1);
+   }
+
+   sleep(5);
+   
+   // enable FIFO  
+   buff[0] = FIFO;
+   buff[1] = 0b11111000;
+
+   if(write(fd, buff,2)!=2){
+   	perror("Failed to write");
+   	exit(1);
    }
 
    sleep(5);
