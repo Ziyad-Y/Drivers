@@ -76,14 +76,13 @@ uint8_t i2c_read(uint8_t reg){
 	return buf[0];
 }
 
-int16_t two_complement_to_signed (uint8_t low, uint8_t high){
-	uint16_t data = merger_bytes(low, high);   
-	if(data & 0x8000){
-		return -(int16_t)(~data +1);
-	}
-	else{
-		return data;
-	}
+int16_t two_complement_to_signed(uint8_t low, uint8_t high) {
+    uint16_t data = merger_bytes(low, high);   
+    if(data & 0x8000) {
+        return -(int16_t)(~data + 1);
+    } else {
+        return data;
+    }
 }
 
 int main() {
@@ -108,6 +107,7 @@ int main() {
 	i2c_write(USER_CTRL, 0x44);
 
 	uint8_t ax_l ,ax_h,ay_l ,ay_h, az_l ,az_h, t_l, t_h, gx_l ,gx_h,gy_l ,gy_h, gz_l ,gz_h;  
+	uint
 	float accel_x =0;
 	float accel_y =0;
 	float accel_z =0; 
@@ -122,7 +122,7 @@ int main() {
 	while(FIFO_LEN != 1024){
 		ax_h = i2c_read(ACCEL_XOUT_H);
 		ax_l = i2c_read(ACCEL_XOUT_L);  
-		FIFO_LEN = merger_bytes(ax_l, ax_l);
+		FIFO_LEN = merger_bytes(ax_l, ax_h);
 		if(FIFO_LEN == 1024){
 			i2c_write(USER_CTRL, 0x44);
 			continue;
@@ -145,7 +145,7 @@ int main() {
 
 			accel_x = (float)two_complement_to_signed(ax_l, ax_h)/16384;   
 			accel_y = (float) two_complement_to_signed(ay_l, ay_h)/ 16384;  
-			accel_z = (float)two_complement_to_signed(az_l, az_l)/16384;    
+			accel_z = (float)two_complement_to_signed(az_l, az_h)/16384;    
 			gyro_x =  two_complement_to_signed(gx_l, gx_h)/32.8;   
 			gyro_y = two_complement_to_signed(gy_l, gy_h)/32.8;
 			gyro_z = two_complement_to_signed(gz_l, gz_h)/32.8;   
