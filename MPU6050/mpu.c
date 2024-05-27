@@ -100,7 +100,7 @@ int main() {
 
 	i2c_write(POWER_MGMT, 0x01);
 	i2c_write(ACCEL_CONFIG, 0x00);
-	i2c_write(GYRO_CONFIG, 0x10);
+	i2c_write(GYRO_CONFIG, 0x00);
 	i2c_write(CONFIG, 0x00);
 	i2c_write(SMPLRT_DIV, 0x07);
 	i2c_write(FIFO_EN,0xF8 ); 
@@ -142,12 +142,12 @@ int main() {
 			gz_h = i2c_read(FIFO_R_W);
 			gz_l = i2c_read(FIFO_R_W);
 
-			accel_x = (float)two_complement_to_signed(ax_l, ax_h)/16384;   
-			accel_y = (float) two_complement_to_signed(ay_l, ay_h)/ 16384;  
-			accel_z = (float)two_complement_to_signed(az_l, az_h)/16384;    
-			gyro_x =  two_complement_to_signed(gx_l, gx_h)/32.8;   
-			gyro_y = two_complement_to_signed(gy_l, gy_h)/32.8;
-			gyro_z = two_complement_to_signed(gz_l, gz_h)/32.8;   
+			accel_x = (float)two_complement_to_signed(ax_l, ax_h)/16384*9.8;   
+			accel_y = (float) two_complement_to_signed(ay_l, ay_h)/ 16384 * 9.8;  
+			accel_z = (float)two_complement_to_signed(az_l, az_h)/16384 * 9.8;    
+			gyro_x =  two_complement_to_signed(gx_l, gx_h)/131;   
+			gyro_y = two_complement_to_signed(gy_l, gy_h)/131;
+			gyro_z = two_complement_to_signed(gz_l, gz_h)/131;   
 			temp = two_complement_to_signed(t_l,t_h)/340.0 + 36.53;  
 
 			printf(" Accel x: %3f, Accel y: %3f, Accel z: %3f\n Gyro x: %3f, Gyro y: %f, Gyro z:%3f\n Temp %3f",
