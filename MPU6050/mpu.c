@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-#define MPU6050_ADDRESS 0x68
+#define MPU6050_ADDRESS 0x69
 #define CONFIG 0x1A
 #define GYRO_CONFIG 0x1B  
 #define ACCEL_CONFIG 0x1C
@@ -87,7 +87,7 @@ int16_t two_complement_to_signed(uint8_t low, uint8_t high) {
 
 int main() {
 
-	fd = open("/dev/i2c-1", O_RDWR);   
+	fd = open("/dev/i2c-22", O_RDWR);   
 	if(fd < 0){
 		perror("Failed to access bus\n");
 		exit(1);
