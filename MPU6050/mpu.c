@@ -119,11 +119,9 @@ int main() {
 
 
 	while(FIFO_LEN != 1024){
-		//ax_h = i2c_read(ACCEL_XOUT_H);
-		//ax_l = i2c_read(ACCEL_XOUT_L);  
-		//FIFO_LEN = merger_bytes(ax_l, ax_h);
-		FIFO_LEN = (i2c_read(FIFO_COUNTH) << 8) | (i2c_read(FIFO_COUNTL));
-		printf("FIFO LEN%d\n", FIFO_LEN);
+		
+		FIFO_LEN = merger_bytes(((i2c_read(FIFO_COUNTL) ), (i2c_read(FIFO_COUNTH) );
+		printf("FIFO LEN = %d\n", FIFO_LEN);
 		if(FIFO_LEN == 1024){
 			i2c_write(USER_CTRL, 0x44);
 			continue;
@@ -153,7 +151,7 @@ int main() {
 			gyro_z = two_complement_to_signed(gz_l, gz_h)/65.5;   
 			temp = two_complement_to_signed(t_l,t_h)/340.0 + 36.53;  
 
-			printf(" Accel x: %3f, Accel y: %3f, Accel z: %3f\n Gyro x: %3f, Gyro y: %f, Gyro z:%3f\n Temp %3f",
+			printf(" Accel x: %3f, Accel y: %3f, Accel z: %3f\n Gyro x: %3f, Gyro y: %f, Gyro z:%3f\n Temp %3f\n",
 				accel_x,accel_y,accel_z,gyro_x,gyro_y,gyro_z,temp);
 		}
 		else{
