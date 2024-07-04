@@ -5,7 +5,7 @@ struct usb_class_driver class;
 
 
 static const struct  usb_device_id ard_tbl [] = {
-	USB_DEVICE( VENDOR_ID, PRODUCT_ID ),  
+	{USB_DEVICE( VENDOR_ID, PRODUCT_ID )},  
 	{}
 };    
 
