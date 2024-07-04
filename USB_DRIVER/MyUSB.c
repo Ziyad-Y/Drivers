@@ -4,12 +4,7 @@ static struct usb_driver driver;
 static struct usb_class_driver class;
 
 
-static struct usb_device_id ard_tbl[]={
-	{USB_DEVICE(VENDOR_ID, PRODUCT_ID)},  
-	{}
-};    
-
-MODULE_DEVICE_TABLE(usb, ard_tbl);      
+ 
 
 /*Utility Functions*/
 static void wait_stop_all_urbs(struct my_usb *arduino)
@@ -393,7 +388,7 @@ static const struct file_operations fops= {
 
 class = {
 	.name = "usb-%d",   
-	.fops=fops,
+	.fops=&fops,
 	.minor_base=7
 
 };
@@ -408,6 +403,12 @@ static struct usb_driver driver =
 	.id_table= ard_tbl
 };
 
+static struct usb_device_id ard_tbl[]={
+	{USB_DEVICE(VENDOR_ID, PRODUCT_ID)},  
+	{}
+};    
+
+MODULE_DEVICE_TABLE(usb, ard_tbl);     
 
 static int __init start_mod(void)
 {
