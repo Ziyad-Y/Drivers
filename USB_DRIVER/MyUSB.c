@@ -1,10 +1,10 @@
 #include "MyUSB.h"  
 
-static struct usb_driver driver;
-static struct usb_class_driver class;
+struct usb_driver driver;
+struct usb_class_driver class;
 
 
-static struct usb_device_id usb_table [] = {
+struct usb_device_id usb_table [] = {
 	{USB_DEVICE( VENDOR_ID, PRODUCT_ID )},  
 	{}
 };    
@@ -439,6 +439,6 @@ module_init(start_mod);
 module_exit(end_mod);  
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Ziyad");
+MODULE_AUTHOR("NAME");
 MODULE_DESCRIPTION("USB DRIVER FOR ARDUINO");
 MODULE_VERSION("0.0.1");
