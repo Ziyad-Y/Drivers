@@ -4,10 +4,10 @@ struct usb_driver driver;
 struct usb_class_driver class;
 
 
-static const struct usb_device_id ard_tbl[] = {
-    { USB_DEVICE(0x2341, 0x0043) },  // Initialize with your specific vendor and product IDs
-    {}  // Terminating entry to indicate end of table
-};
+const struct  usb_device_id ard_tbl [] = {
+	{USB_DEVICE(VENDOR_ID, PRODUCT_ID)},  
+	{}
+};    
 
 MODULE_DEVICE_TABLE(usb, ard_tbl);      
 
