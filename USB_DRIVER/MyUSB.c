@@ -68,8 +68,8 @@ static int arduino_probe (struct usb_interface *interface, const struct usb_devi
 	h_interface = interface->cur_altsetting;
 	for(i = 0; i< h_interface->desc.bNumEndpoints; i++){
 		e_desc = &h_interface->endpoint[i].desc;
-		dev_info(&interface->dev,"Endpoint:%d\t Address:0x%x\t Max Packet:%d bytes\n", i+1, 
-										e_desc->bEndpointAddress, e_desc->wMaxPacketSize);
+		dev_info(&interface->dev,
+			"Endpoint:%d\t Address:0x%x\t Max Packet:%d bytes\n", i+1, e_desc->bEndpointAddress, e_desc->wMaxPacketSize);
 	}
 
 	arduino = kzalloc(sizeof(*arduino), GFP_KERNEL);   
@@ -222,9 +222,7 @@ static void read_callback(struct urb *urb)
 			 urb->status==-ENOENT
 			 )){
 			dev_err(&arduino->interface->dev,   
-				"%s: read failed,error %d\n",
-				__func__,urb->status
-				);
+				"%s: read failed,error %d\n", __func__,urb->status);
 			arduino->error=urb->status;
 		}
 	}
@@ -244,8 +242,7 @@ static void write_callback(struct urb *urb)
 			urb->status== -ESHUTDOWN)){
 
 				dev_info(arduino->interface->dev,
-				 "%s bulk write error: %d\n", 
-				 __func__, urb->status); 
+				 "%s bulk write error: %d\n", __func__, urb->status);
 			spin_lock_irqsave(&arduino->lock, flags);
 			arduino->error=urb->status;
 			spin_unlock_irqrestore(&arduino->lock, flags);
@@ -302,8 +299,7 @@ static ssize_t bulk_transfer_out(struct file *file,
 
 	if(ret){
 		dev_err(&arduino->interface->dev,  
-				"%s :Failed to submit urb, 
-				error %d\n", __func__, ret );
+				"%s :Failed to submit urb, error %d\n", __func__, ret );
 		goto anchor_err;
 	}
 
@@ -368,8 +364,7 @@ static ssize_t interupt_transfer_in(struct file * file,
 
 	if(ret){
 		dev_err(&arduino->interface->dev,  
-				"%s :Failed to submit urb, 
-				error %d\n", __func__, ret );
+				"%s :Failed to submit urb, error %d\n", __func__, ret );
 		goto anchor_err;
 	}
 
@@ -384,8 +379,7 @@ static ssize_t interupt_transfer_in(struct file * file,
 		}
 		return ret;   
 
-	exit:   
-		return ret;
+	exit: return ret;
 
 }
 
@@ -441,4 +435,4 @@ module_exit(end_mod);
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("NAME");
 MODULE_DESCRIPTION("USB DRIVER FOR ARDUINO");
-MODULE_VERSION("0.0.1");
+MODULE_VERSION("0.1");
