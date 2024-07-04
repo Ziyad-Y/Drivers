@@ -12,7 +12,7 @@ struct  usb_device_id ard_tbl [] = {
 MODULE_DEVICE_TABLE(usb, ard_tbl);      
 
 /*Utility Functions*/
-void wait_stop_all_urbs(struct my_usb *arduino)
+static void wait_stop_all_urbs(struct my_usb *arduino)
 {
 	int timeout;   
 	timeout = usb_wait_anchor_empty_timeout(arduino->anchor,1000);  
@@ -27,7 +27,7 @@ void wait_stop_all_urbs(struct my_usb *arduino)
 
 }
 
-void complete_stop_urbs(struct my_usb arduino)
+static void complete_stop_urbs(struct my_usb arduino)
 {
 	
 	usb_kill_anchored_urbs(&arduino->anchor);
@@ -36,7 +36,7 @@ void complete_stop_urbs(struct my_usb arduino)
 
 }
 
-void clean_up(struct kref * kref)
+static void clean_up(struct kref * kref)
 {
 	struct my_usb * arduino = to_my_usb(kref);    
 	usb_free_urb(arduino->int_in_urb);
