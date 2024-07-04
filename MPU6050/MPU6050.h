@@ -33,8 +33,5 @@
 #define ZTEST 0x0F
 #define ATEST 0x10
 
-
-int mpuprobe (struct i2c_client *client);
-void mpuremove (struct i2c_client *client);
 #endif    
 
