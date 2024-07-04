@@ -18,11 +18,11 @@
 #define FAILURE -1
 
 /*Algortihms function of adapter struct*/
-static int my_xfer(struct i2c_adapter * adapter , struct i2c_msg * msgs, int num );   
-static int my_smbus_xfer(struct i2c_adapter * adapter, u16 addr , unsigned short flags , 
+int my_xfer(struct i2c_adapter * adapter , struct i2c_msg * msgs, int num );   
+int my_smbus_xfer(struct i2c_adapter * adapter, u16 addr , unsigned short flags , 
 											char read_write, 
 											u8 command , int size, union i2c_smbus_data * data);   
-static u32 my_func(struct i2c_adapter *adapter);    
+u32 my_func(struct i2c_adapter *adapter);    
 
 
 #endif

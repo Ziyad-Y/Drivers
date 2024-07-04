@@ -24,8 +24,6 @@
 /* Arduino R3 */
 #define VENDOR_ID 0x2341  /* vendor idendtifier*/   
 #define PRODUCT_ID 0x0043  /* product id */
-#define MAX_PACKET_OUT 0x0040 /* 1x 64 bytes*/    
-#define MAX_PACKET_IN 0x0008 /* 1x 8 bytes */
 
 
 #define MIN(a,b)					\
@@ -57,67 +55,27 @@ struct my_usb{
 	u8						int_in_addr; 		/*interupt in address 0x82*/   
 };
 
+/* 
+* struct usb_driver
+*/
+int probe(struct usb_interface *intf, const struct usb_device_id *id);
+void disconnect(struct usb_interface *intf);    
+int suspend(struct usb_interface *intf, unsigned pm_message_t message);
+int resume(struct usb_interface *intf);
 
 /*
-* struct usb_driver   
-* @probe probe all usb devices and find flashdrive    
-* @disconnect unplug/disconnect usb device from machine   
-* @suspend called when Device is going to suspended by system   
-* @resume called when device is being resumed by system
+* utility functions
+* @free_res free resources
 */
-
-int arduino_probe (struct usb_interface *interface, const struct usb_device_id *id);   
-
-void arduino_disconnect (struct usb_interface *interface);  
-
-int arduino_suspend(struct usb_interface *interface, pm_message_t message);   
-
-int arduino_resume(struct usb_interface *interface);
+void free_res(struct kref *kref);
+void wait_stop_all_urbs(struct my_usb *usbdev);
 
 /*
-* Utility function
-* @wait_stop_all_urbs wait a time duration and kill urb
-* @complete_stop_urbs kill all urb at once without wating.
-* @resume_urb resume urb request and communication after suspend
-* @clean_up free up resources that are no longer being used  
+* File operations fops
 */
-
-void wait_stop_all_urbs(struct my_usb *arduino);
-
-void complete_stop_urbs(struct my_usb * arduino);
-
-void resume_urb(struct my_usb *arduino);
-
-void clean_up(struct my_usb *arduino);
-
-void init_my_usb(struct my_usb * arduino);
-/*  
-* Establish communication with arduino
-* IN : Interupt Transfer  
-* OUT : BULK Transfer
-* @arduino_open needed for fops  
-* @arduino_release needed for fops
-* @bulk_trasnfer_out tranfer data from HOST to device connected Via USB  
-* @write_callback write callback functionf for urb 
-* @interupt_tranfer_in read data from USB
-* @read_callback  read callback function
-*/
-int arduino_open(struct inode *inode, struct file *file);     
-
-void arduino_release(struct inode *inode, struct file *file)
-
-ssize_t bulk_transfer_out(	struct file * file, 
-							const char __user * buffer, 
-							size_t count, 
-							loff_t *offset );   
-void write_callback(struct urb *urb);
-
-ssize_t interupt_transfer_in(struct file *file, 
-							char __user *buffer, 
-							size_t count, 
-							loff_t *offset );   
-
-void read_callback(struct urb *urb);
-
+ssize_t read(struct file *, char __user *, size_t, loff_t *);
+ssize_t write(struct file *, const char __user *, size_t, loff_t);
+int open(struct inode *, struct file);   
+int release(struct inode * , struct file *);
 #endif   
 
