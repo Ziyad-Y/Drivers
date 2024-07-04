@@ -31,13 +31,6 @@ struct xorshiro
 	int jump;
 };
 
-static void generator_init(struct xorshiro* ,u64, int);  
-static u64 next(struct xorshiro *);   
-static void jump(struct xorshiro *);   
-static int device_open(struct inode * , struct file *);   
-static int device_release(struct inode *, struct file *);   
-static ssize_t device_read(struct file * , char __user *, size_t ,loff_t *);
-
 enum{
 	UNUSED =0,
 	OPENED =1   	
