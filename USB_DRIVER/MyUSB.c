@@ -1,10 +1,10 @@
 #include "MyUSB.h"  
 
-struct usb_driver driver;
-struct usb_class_driver class;
+static struct usb_driver driver;
+static struct usb_class_driver class;
 
 
-struct  usb_device_id ard_tbl [] = {
+static struct usb_device_id ard_tbl[]={
 	{USB_DEVICE(VENDOR_ID, PRODUCT_ID)},  
 	{}
 };    
@@ -398,7 +398,7 @@ class = {
 
 };
 
-driver = 
+static struct usb_driver driver = 
 {
 	.name="ard_usb",   
 	.probe= arduino_probe,
