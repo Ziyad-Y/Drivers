@@ -134,7 +134,7 @@ static int arduino_probe (struct usb_interface *interface, const struct usb_devi
 
 static void arduino_disconnect (struct usb_interface * interface)
 {
-	dev_info(interface->dev, "Disconnecting device");   
+	dev_info(&interface->dev, "Disconnecting device");   
 }
 
 static int arduino_suspend(struct usb_interface * interface, pm_message_t message)
@@ -142,7 +142,7 @@ static int arduino_suspend(struct usb_interface * interface, pm_message_t messag
 	struct my_usb * dev = usb_get_intfdata(interface);   
 	
 	if(dev){
-		dev_info(interface->dev, "suspending device");
+		dev_info(&interface->dev, "suspending device");
 		wait_stop_all_urbs(dev);
 		return 0;
 	}
@@ -201,7 +201,7 @@ static void arduino_release(struct inode * inode, struct file * file)
 	arduino = file->private_data;    
 
 	if(!arduino)
-		dev_err(arduino->interface->de, "error accessing device");   
+		dev_err(&arduino->interface->dev, "error accessing device");   
 
 	usb_autopm_put_interface(arduino->interface);    
 	kref_put(&arduino->kref, clean_up);
