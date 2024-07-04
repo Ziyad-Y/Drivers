@@ -4,7 +4,7 @@ struct usb_driver driver;
 struct usb_class_driver class;
 
 
-const struct  usb_device_id ard_tbl [] = {
+struct  usb_device_id ard_tbl [] = {
 	{USB_DEVICE(VENDOR_ID, PRODUCT_ID)},  
 	{}
 };    
