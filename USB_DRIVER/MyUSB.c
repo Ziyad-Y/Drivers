@@ -294,7 +294,8 @@ static ssize_t bulk_transfer_out(struct file *file,
 					  write_callback,
 					  arduino
 					  );
-	arduino->bulk_out_urb->transfer_flgas|=URB_SHORT_TRANSFER_OK;     
+	arduino->bulk_out_urb->transfer_flags|=URB_SHORT_TRANSFER_OK;  
+	arduino->bulk_out_urb->transfer_flags|=URB_TRANSFER_DMA_MAP;   
 	usb_anchor_urb(arduino->anchor);
 
 	ret= usb_submit_urb(arduino->bulk_out_urb, GFP_KERNEL);
@@ -387,3 +388,57 @@ static ssize_t interupt_transfer_in(struct file * file,
 		return ret;
 
 }
+
+static const struct file_operations fops= {
+	.owner=THIS_MODULE,   
+	.open=arduino_open,
+	.release=arduino_release, 
+	.read=bulk_transfer_out,    
+	.write= interupt_transfer_in
+};
+
+class = {
+	.name = "usb-%d",   
+	.fops=fops,
+	.minor_base=7
+
+};
+
+driver = 
+{
+	.name="ard_usb",   
+	.probe= arduino_probe,
+	.disconnect = arduino_disconnect,    
+	.suspend=arduino_suspend,   
+	.resume= arduino_resume, 
+	.id_table= usb_table
+};
+
+
+static int __init start_mod(void)
+{
+	int ret;   
+	ret= usb_register(&driver);
+	if(ret< 0){
+		pr_info("Error Initiating Driver");
+		return -1;
+	}
+
+	return ret;
+
+
+}
+
+static void __exit end_mod(void)
+{
+	pr_info("Removing MOD\n");
+	usb_deregister(&driver);
+}
+
+module_init(start_mod);   
+module_exit(end_mod);  
+
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR("Ziyad");
+MODULE_DESCRIPTION("USB DRIVER FOR ARDUINO");
+MODULE_VERSION("0.0.1");

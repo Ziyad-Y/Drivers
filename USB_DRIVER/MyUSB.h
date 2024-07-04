@@ -50,12 +50,11 @@ struct my_usb{
 	unsigned char 			*read_buffer;  		/*read data*/
 	spinlock_t 				lock;				/*lock*/   
 	size_t 					max_out;			/*write size */
-	size_t 					max_in 				/*read size*/  
+	size_t 					max_in; 			/*read size*/  
 	struct kref 			kref;  				/*kernel reference*/   
 	int 					errors;     		/*save previous errors*/
 	u8 						bulk_out_addr;		/*bulk out address 0x83*/   
 	u8						int_in_addr; 		/*interupt in address 0x82*/   
-
 };
 
 
@@ -99,7 +98,7 @@ void init_my_usb(struct my_usb * arduino);
 * @arduino_open needed for fops  
 * @arduino_release needed for fops
 * @bulk_trasnfer_out tranfer data from HOST to device connected Via USB  
-* @write_callback write callback functionf for urb
+* @write_callback write callback functionf for urb 
 * @interupt_tranfer_in read data from USB
 * @read_callback  read callback function
 */
