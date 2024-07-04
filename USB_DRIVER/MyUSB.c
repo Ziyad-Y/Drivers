@@ -4,12 +4,12 @@ struct usb_driver driver;
 struct usb_class_driver class;
 
 
-static const struct  usb_device_id usb_table [] = {
+static const struct  usb_device_id ard_tbl [] = {
 	{USB_DEVICE( VENDOR_ID, PRODUCT_ID )},  
 	{}
 };    
 
-MODULE_DEVICE_TABLE(usb, usb_table);      
+MODULE_DEVICE_TABLE(usb, ard_tbl);      
 
 /*Utility Functions*/
 void wait_stop_all_urbs(struct my_usb *arduino)
@@ -411,7 +411,7 @@ driver =
 	.disconnect = arduino_disconnect,    
 	.suspend=arduino_suspend,   
 	.resume= arduino_resume, 
-	.id_table= usb_table
+	.id_table= ard_tbl
 };
 
 
