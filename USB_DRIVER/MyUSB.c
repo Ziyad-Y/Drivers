@@ -4,7 +4,7 @@ struct usb_driver driver;
 struct usb_class_driver class;
 
 
-struct const usb_device_id usb_table [] = {
+static const struct  usb_device_id usb_table [] = {
 	{USB_DEVICE( VENDOR_ID, PRODUCT_ID )},  
 	{}
 };    
