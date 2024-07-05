@@ -34,25 +34,25 @@
 	})
 
 
-#define to_my_usb(d) 			\
+#define to_my_usb(ptr) 			\
 	container_of(ptr,struct my_usb,kref)   
 
 struct my_usb{
 	struct usb_device 		*device;   			/*usb ddevice */
-	struct usb_interface 	*interface;   			/* interface of device */
-	struct usb_anchor		anchor;
-	struct urb 				*bulk_out_urb;		/*bulk out urb*/   
-	struct urb 				*int_in_urb; 		/*interupt out urb*/ 
+	struct usb_interface 	*interface;   		/* interface of device */
+	struct usb_anchor		anchor;				/*anchor*/	
+	struct urb 				*bulk_urb;			/*bulk out urb*/   
+	struct urb 				*int_urb; 			/*interupt out urb*/ 
 	struct semaphore		write_limit; 		/*ensure 64 bytes max at a time*/
-	unsigned char 			*write_buffer; 		/*buffer that handles writes*/
-	unsigned char 			*read_buffer;  		/*read data*/
+	unsigned char 			*wbuff; 			/*buffer that handles writes*/
+	unsigned char 			*rbuff;  			/*read data*/
 	spinlock_t 				lock;				/*lock*/   
 	size_t 					max_out;			/*write size */
 	size_t 					max_in; 			/*read size*/  
 	struct kref 			kref;  				/*kernel reference*/   
 	int 					errors;     		/*save previous errors*/
-	u8 						bulk_out_addr;		/*bulk out address 0x83*/   
-	u8						int_in_addr; 		/*interupt in address 0x82*/   
+	u8 						bulk_addr;		/*bulk out address 0x83*/   
+	u8						int_addr; 		/*interupt in address 0x82*/   
 };
 
 
