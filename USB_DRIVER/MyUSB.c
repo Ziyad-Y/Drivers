@@ -8,7 +8,7 @@ static struct usb_device_id usb_table[]= {
 
 MODULE_DEVICE_TABLE(usb,usb_table);
 
-
+static struct usb_driver driver;
 /*
 * utility functions
 * @free_res free resources
@@ -185,7 +185,7 @@ static ssize_t read(struct file *file,
 					 udev,
 					 interval
 					 );
-	usb_anchor_urb(&udev->int_urb, &udev->anchor);
+	usb_anchor_urb(udev->int_urb, &udev->anchor);
 
 	ret=usb_submit_urb(udev->int_urb, GFP_KERNEL);
 
