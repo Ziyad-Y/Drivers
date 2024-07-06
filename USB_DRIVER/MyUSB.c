@@ -85,7 +85,7 @@ static void write_callback(struct urb *urb)
 }
 
 static ssize_t write(struct file *file, 
-					char __user *buffer, 
+					const char __user *buffer, 
 					size_t count, 
 					loff_t *offset)
 {
@@ -151,7 +151,7 @@ static ssize_t write(struct file *file,
 		return ret;
 }
 static ssize_t read(struct file *file, 
-					const char __user *buffer, 
+					char __user *buffer, 
 					size_t count, 
 					loff_t *offset)
 {
