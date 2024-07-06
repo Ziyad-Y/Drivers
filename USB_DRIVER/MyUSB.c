@@ -278,7 +278,7 @@ static void disconnect(struct usb_interface *intf)
 	dev_info(&intf->dev, "disconnecting device");
 }    
 
-static int suspend(struct usb_interface *intf, unsigned pm_message_t message)
+static int suspend(struct usb_interface *intf, pm_message_t message)
 {
 	struct my_usb * udev = usb_get_intfdata(intf);   
 		
@@ -349,7 +349,7 @@ static int probe(struct usb_interface *intf, const struct usb_udevice_id *id){
 	kref_init(&udev->kref);  
 	spin_lock_init(&udev->lock); 
 
-	udev->wbuff = kzalloc(udev_>max_out, GFP_KERNEL);   
+	udev->wbuff = kzalloc(udev->max_out, GFP_KERNEL);   
 	if(!udev->wbuff){
 		dev_err(&intf->dev, 
 			"Failed to allocate memory for write buffer");
@@ -357,7 +357,7 @@ static int probe(struct usb_interface *intf, const struct usb_udevice_id *id){
 		goto error; 
 	}
 	
-	udev->rbuff = kzalloc(max_in,GFP_KERNEL);   
+	udev->rbuff = kzalloc(udev->max_in,GFP_KERNEL);   
 
 	if(!udev->rbuff){
 		ret = -ENOMEM;
