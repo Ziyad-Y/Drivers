@@ -60,7 +60,7 @@ static void read_callback(struct urb *urb)
 		}
 		
 	}
-	spin_lock_irqstore(&&udev->lock,flags);
+	spin_lock_irqstore(&udev->lock,flags);
 }   
 
 static void write_callback(struct urb *urb)
@@ -115,7 +115,7 @@ static ssize_t write(struct file *file,
 	}    
 
 	usb_fill_bulk_urb(udev->bulk_urb,
-					  usb_sndbulkpipe(udev->device,udev->bulk_out_addr),
+					  usb_sndbulkpipe(udev->device,udev->bulk_addr),
 					  udev->wbuff, write_size,
 					  write_callback,
 					  udev
@@ -179,7 +179,7 @@ static ssize_t read(struct file *file,
 	}
 	usb_fill_int_urb(udev->int_urb,
 					 udev->device,
-					 usb_rcvintpipe(udev->device, udev->int_in_addr), 
+					 usb_rcvintpipe(udev->device, udev->int_addr), 
 					 udev->rbuff,
 					 read_size, read_callback,
 					 udev,
@@ -255,7 +255,7 @@ static int release(struct inode *inode, struct file *file)
 }   
 
 static struct file_operations fops={
-	.owner=THIS_MODULE;
+	.owner=THIS_MODULE,
 	.open=open,    
 	.release=release,   
 	.read-read,
@@ -264,7 +264,7 @@ static struct file_operations fops={
 
 static struct usb_class_driver class={
 	.name="myusb-%d",  
-	.fops=&fops;
+	.fops=&fops,
 	.minor_base=7
 };
 
@@ -278,7 +278,7 @@ static void disconnect(struct usb_interface *intf)
 
 static int suspend(struct usb_interface *intf, unsigned pm_message_t message)
 {
-	struct my_usb * udev = usb_get_intfdata(interface);   
+	struct my_usb * udev = usb_get_intfdata(intf);   
 		
 		if(udev){
 			udev_info(&interface->udev, "suspending udevice");
@@ -291,8 +291,8 @@ static int suspend(struct usb_interface *intf, unsigned pm_message_t message)
 
 static int resume(struct usb_interface *intf)
 {
-	struct my_usb * udev = usb_get_intfdata(interface);
-	usb_anchor_resume_wakeups(udev->anchor);
+	struct my_usb * udev = usb_get_intfdata(intf);
+	usb_anchor_resume_wakeups(&udev->anchor);
 	return 0;
 }
 static int probe(struct usb_interface *intf, const struct usb_udevice_id *id){
@@ -303,12 +303,12 @@ static int probe(struct usb_interface *intf, const struct usb_udevice_id *id){
 	int i, val;
 
 	if(id->idVendor != VENDOR_ID){
-		dev_err(&interface->dev,"Incorrect vendor");
+		dev_err(&intf->dev,"Incorrect vendor");
 		ret = -1;
 	}
 
 	if(id->idProduct != PRODUCT_ID){
-		dev_err(&interface->dev,"Incorrect product");
+		dev_err(&intf->dev,"Incorrect product");
 		ret = -1;
 	}
 
@@ -327,18 +327,18 @@ static int probe(struct usb_interface *intf, const struct usb_udevice_id *id){
 		goto error;
 	}
 
-	val = usb_find_common_endpoints(interface->cur_altsetting,
+	val = usb_find_common_endpoints(intf->cur_altsetting,
 									NULL, &bulk_out, &int_in,NULL);
 	
 	if(val){
-		dev_err(&interface->dev, "Could not find endpoints");  
+		dev_err(&intf->dev, "Could not find endpoints");  
 		goto error;
 	}
 	
 	udev->max_out = usb_endpoint_maxp(bulk_out);  
-	udev->bulk_out_addr= bulk_out->bEndpointAddress; 
+	udev->bulk_addr= bulk_out->bEndpointAddress; 
 	udev->max_in = usb_endpoint_maxp(int_in);   	
-	udev->int_in_addr = int_in->bEndpointAddress; 
+	udev->int_addr = int_in->bEndpointAddress; 
 
 	
 	udev->int_urb = usb_alloc_urb(0, GFP_KERNEL);
@@ -347,8 +347,8 @@ static int probe(struct usb_interface *intf, const struct usb_udevice_id *id){
 		goto error;
 	}
 
-	udev->device= usb_get_dev(interface_to_usbdev(interface));
-	udev->interface=usb_get_intf(interface);
+	udev->device= usb_get_dev(interface_to_usbdev(intf));
+	udev->interface=usb_get_intf(intf);
 
 
 	init_usb_anchor(&udev->anchor);   
@@ -358,7 +358,7 @@ static int probe(struct usb_interface *intf, const struct usb_udevice_id *id){
 
 	udev->wbuff = kzalloc(udev_>max_out, GFP_KERNEL);   
 	if(!udev->wbuff){
-		dev_err(&interface->dev, 
+		dev_err(&intf->dev, 
 			"Failed to allocate memory for write buffer");
 		ret = -ENOMEM;
 		goto error; 
@@ -371,7 +371,9 @@ static int probe(struct usb_interface *intf, const struct usb_udevice_id *id){
 		goto error;    
 	}
 
-	ret = usb_register_dev(interface, &class);
+	ret = usb_register_dev(intf, &class);
+
+	usb_set_intfdata(intf, udev);
 	return ret;
 	
 	error:
