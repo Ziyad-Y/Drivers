@@ -379,6 +379,32 @@ static struct usb_driver driver={
 	.probe=probe,
 	.suspend=suspend;  
 	.disconnect=disconnect,
-	.resume=resume
-
+	.resume=resume,
+	.id_table= usb_table
 };
+
+static int __init usb_init(void)
+{
+	int ret;   
+
+	ret= usb_register(&driver);   
+
+	if(ret){
+		pr_err("error registering device");
+	}
+	return ret;
+}
+
+static void __exit usb_exit(void);
+{
+	pr_info("Deregistering device\n");
+	usb_deregister(&driver);
+}
+
+module_init(usb_init);
+module_exit(usb_exit);  
+
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR("Ziyad Yacoubou");
+MODULE_DESCRIPTION("USB DRIVER FOR ARDUINO");
+MODULE_VERSION("0.1");
