@@ -252,13 +252,15 @@ static int release(struct inode *inode, struct file *file)
 
 	usb_autopm_put_interface(udev->interface);    
 	kref_put(&udev->kref, free_res);
+
+	return 0;
 }   
 
 static struct file_operations fops={
 	.owner=THIS_MODULE,
 	.open=open,    
 	.release=release,   
-	.read-read,
+	.read=read,
 	.write=write,
 };
 
