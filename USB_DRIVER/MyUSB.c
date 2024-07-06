@@ -252,7 +252,7 @@ static int release(struct inode *inode, struct file *file)
 		dev_err(&udev->interface->dev, "error accessing udevice");   
 
 	usb_autopm_put_interface(udev->interface);    
-	kref_put(&udev->kref, clean_up);
+	kref_put(&udev->kref, free_res);
 }   
 
 static struct file_operations fops={
@@ -369,7 +369,7 @@ static int probe(struct usb_interface *intf, const struct usb_udevice_id *id){
 	return ret;
 	
 	error:
-		kref_put(&udev->kref, clean_up);
+		kref_put(&udev->kref, free_res);
 		return ret;
 }
 
