@@ -310,7 +310,7 @@ static int probe(struct usb_interface *intf, const struct usb_device_id *id){
 	}
 
 	if(id->idProduct != PRODUCT_ID){
-		dev_err(&interface->dev,"Incorrect product");
+		dev_err(&intf->dev,"Incorrect product");
 		ret = -1;
 	}
 
