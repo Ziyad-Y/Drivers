@@ -3,7 +3,7 @@
 static struct usb_class_driver class;
 
 static struct usb_udevice_id usb_table[]= {
-	{USB_udevICE(VENDOR_ID, PRODUCT_ID)},
+	{USB_DEVICE(VENDOR_ID, PRODUCT_ID)},
 	{}
 };
 
@@ -21,7 +21,7 @@ static void free_res(struct kref *kref)
 	usb_free_urb(udev->bulk_urb);   
 	kfree(udev->wbuff);     
 	kfree(udev->rbuff);
-	usb_put_udev(udev->device);
+	usb_put_dev(udev->device);
 }
 
 static void wait_stop_all_urbs(struct my_usb *udev)
@@ -81,7 +81,7 @@ static void write_callback(struct urb *urb)
 		
 		spin_lock_irqsave(&udev->lock, flags);
 		udev->errors= urb->status;
-		spin_lock_irqstore(&&udev->lock,flags);
+		spin_lock_irqstore(&udev->lock,flags);
 	}
 }
 
