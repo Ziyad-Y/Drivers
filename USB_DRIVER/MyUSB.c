@@ -60,7 +60,7 @@ static void read_callback(struct urb *urb)
 		}
 		
 	}
-	spin_lock_irqstore(&udev->lock,flags);
+	spin_lock_irqrestore(&udev->lock,flags);
 }   
 
 static void write_callback(struct urb *urb)
@@ -80,7 +80,7 @@ static void write_callback(struct urb *urb)
 		
 		spin_lock_irqsave(&udev->lock, flags);
 		udev->errors= urb->status;
-		spin_lock_irqstore(&udev->lock,flags);
+		spin_lock_irqrestore(&udev->lock,flags);
 	}
 }
 
@@ -311,10 +311,10 @@ static int probe(struct usb_interface *intf, const struct usb_udevice_id *id){
 		ret = -1;
 	}
 
-	h_interface = interface->cur_altsetting;
+	h_interface = intf->cur_altsetting;
 	for(i = 0; i< h_interface->desc.bNumEndpoints; i++){
 		e_desc = &h_interface->endpoint[i].desc;
-		dev_info(&interface->dev,
+		dev_info(&intf->dev,
 			"Endpoint:%d\t Address:0x%x\t Max Packet:%d bytes\n", i+1, e_desc->bEndpointAddress, e_desc->wMaxPacketSize);
 	}
 
@@ -351,9 +351,9 @@ static int probe(struct usb_interface *intf, const struct usb_udevice_id *id){
 
 
 	init_usb_anchor(&udev->anchor);   
-	sema_init(udev->write_limit,1);   
-	kref_init(udev->kref);  
-	spin_lock_init(&&udev->lock); 
+	sema_init(&udev->write_limit,1);   
+	kref_init(&udev->kref);  
+	spin_lock_init(&udev->lock); 
 
 	udev->wbuff = kzalloc(udev_>max_out, GFP_KERNEL);   
 	if(!udev->wbuff){
@@ -383,7 +383,7 @@ static int probe(struct usb_interface *intf, const struct usb_udevice_id *id){
 
 static struct usb_driver driver={   
 	.probe=probe,
-	.suspend=suspend;  
+	.suspend=suspend,  
 	.disconnect=disconnect,
 	.resume=resume,
 	.id_table= usb_table
