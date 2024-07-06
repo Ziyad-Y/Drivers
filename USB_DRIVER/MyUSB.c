@@ -109,7 +109,7 @@ static ssize_t write(struct file *file,
 										GFP_KERNEL,
 										&udev->bulk_urb->transfer_dma);
 
-	if(copy_from_user(buffer,udev->wbuff,write_size)){
+	if(copy_from_user(udev->wbuff,buffer,write_size)){
 		ret = -EFAULT;
 		goto exit;
 	}    
@@ -287,7 +287,7 @@ static int suspend(struct usb_interface *intf, pm_message_t message)
 			wait_stop_all_urbs(udev);
 			return 0;
 		}
-		dev_info(&interface->dev, "%s-No device found",__func__ );
+		dev_info(&udev->interface->dev, "%s-No device found",__func__ );
 		return 0;
 }
 
@@ -305,7 +305,7 @@ static int probe(struct usb_interface *intf, const struct usb_device_id *id){
 	int i, val;
 
 	if(id->idVendor != VENDOR_ID){
-		dev_err(&interface->dev,"Incorrect vendor");
+		dev_err(&intf->dev,"Incorrect vendor");
 		ret = -1;
 	}
 
