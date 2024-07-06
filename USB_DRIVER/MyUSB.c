@@ -155,12 +155,12 @@ static ssize_t read(struct file *file,
 					size_t count, 
 					loff_t *offset)
 {
-	struct my_usb *udev;
+	struct my_usb *udev=file->private_data;
 	int ret=0;     
 	int interval=10;
 	int read_size = MIN(udev->max_in, count);    
 
-	udev= file->private_data;
+	
 
 	if(!udev->int_urb){
 		udev->int_urb= usb_alloc_urb(0,GFP_KERNEL);
