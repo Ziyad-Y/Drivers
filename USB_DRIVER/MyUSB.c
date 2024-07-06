@@ -122,7 +122,7 @@ static ssize_t write(struct file *file,
                   udev);
 
 	udev->bulk_urb->transfer_flags|=URB_NO_TRANSFER_DMA_MAP;   
-	usb_anchor_urb(udev->anchor);
+	usb_anchor_urb(udev->bulk_urb,&udev->anchor);
 
 	ret= usb_submit_urb(udev->bulk_urb, GFP_KERNEL);
 
@@ -160,7 +160,7 @@ static ssize_t read(struct file *file,
 	int interval=10;
 	int read_size = MIN(udev->max_in, count);    
 
-	udev->private_data;
+	udev= file->private_data;
 
 	if(!udev->int_urb){
 		udev->int_urb= usb_alloc_urb(0,GFP_KERNEL);
@@ -185,7 +185,7 @@ static ssize_t read(struct file *file,
 					 udev,
 					 interval
 					 );
-	usb_anchor_urb(udev->int_urb);
+	usb_anchor_urb(&udev->int_urb, &udev->anchor);
 
 	ret=usb_submit_urb(udev->int_urb, GFP_KERNEL);
 
@@ -322,7 +322,7 @@ static int probe(struct usb_interface *intf, const struct usb_udevice_id *id){
 	udev = kzalloc(sizeof(*udev), GFP_KERNEL);   
 	
 	if(!udev){
-		dev_err(&interface->dev, "Error allocating Memory for Device info");
+		dev_err(&intf->dev, "Error allocating Memory for Device info");
 		ret = -ENOMEM;
 		goto error;
 	}
