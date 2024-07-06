@@ -115,11 +115,10 @@ static ssize_t write(struct file *file,
 	}    
 
 	usb_fill_bulk_urb(udev->bulk_urb,
-					  usb_sndbulkpipe(udev->device,udev->bulk_addr),
-					  udev->wbuff, write_size,
-					  write_callback,
-					  udev
-					  );
+                  usb_sndbulkpipe(udev->device, udev->bulk_addr),
+                  udev->wbuff, write_size,
+                  write_callback, 
+                  udev);
 
 	udev->bulk_urb->transfer_flags|=URB_NO_TRANSFER_DMA_MAP;   
 	usb_anchor_urb(udev->anchor);
@@ -234,7 +233,7 @@ static int open(struct inode *inode, struct file *file){
 		goto error;	
 	
 	
-	kref_get(udev->kref);
+	kref_get(&udev->kref);
 
 	file->private_data = udev;
 
