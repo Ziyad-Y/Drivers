@@ -414,6 +414,6 @@ module_init(usb_init);
 module_exit(usb_exit);  
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Ziyad Yacoubou");
+MODULE_AUTHOR("Ziyad");
 MODULE_DESCRIPTION("USB DRIVER FOR ARDUINO");
 MODULE_VERSION("0.1");
