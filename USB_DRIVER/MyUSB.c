@@ -1,6 +1,5 @@
 #include "MyUSB.h"   
 
-static struct usb_class_driver class;
 
 static struct usb_udevice_id usb_table[]= {
 	{USB_DEVICE(VENDOR_ID, PRODUCT_ID)},
@@ -256,10 +255,17 @@ static int release(struct inode *inode, struct file *file)
 }   
 
 static struct file_operations fops={
+	.owner=THIS_MODULE;
 	.open=open,    
 	.release=release,   
 	.read-read,
-	.write=write
+	.write=write,
+};
+
+static struct usb_class_driver class={
+	.name="myusb-%d",  
+	.fops=&fops;
+	.minor_base=7
 };
 
 /* 
@@ -374,8 +380,7 @@ static int probe(struct usb_interface *intf, const struct usb_udevice_id *id){
 }
 
 
-static struct usb_driver driver={
-	.owner=THIS_MODULE;   
+static struct usb_driver driver={   
 	.probe=probe,
 	.suspend=suspend;  
 	.disconnect=disconnect,
