@@ -115,6 +115,7 @@ static ssize_t write(struct file *file,
 	}    
 
 	usb_fill_bulk_urb(udev->bulk_urb,
+				  udev->device,
                   usb_sndbulkpipe(udev->device, udev->bulk_addr),
                   udev->wbuff, write_size,
                   write_callback, 
