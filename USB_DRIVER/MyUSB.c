@@ -26,13 +26,13 @@ static void free_res(struct kref *kref)
 
 static void wait_stop_all_urbs(struct my_usb *udev)
 {
-	int timeout = usb_wait_anchor_empty_timeout(udev->anchor, 1000);
+	int timeout = usb_wait_anchor_empty_timeout(&udev->anchor, 1000);
 
 	if(!timeout){
 		
 		usb_block_urb(udev->bulk_urb);
 		usb_block_urb(udev->int_urb);
-		usb_kill_anchored_urb(&udev->anchor);
+		usb_kill_anchored_urbs(&udev->anchor);
 	}
 	usb_kill_urb(udev->bulk_urb);
 	usb_kill_urb(udev->int_urb);
@@ -49,7 +49,7 @@ static void read_callback(struct urb *urb)
 	unsigned long flags;
 
 	udev= urb->context;   
-	spin_lock_irqsave(udev->lock, flags);
+	spin_lock_irqsave(&udev->lock, flags);
 	if(urb->status){
 		if(!(urb->status==-ENOENT||
 			 urb->status== -ESHUTDOWN||
@@ -61,7 +61,7 @@ static void read_callback(struct urb *urb)
 		}
 		
 	}
-	spin_lock_irqstore(&udev->lock,flags);
+	spin_lock_irqstore(&&udev->lock,flags);
 }   
 
 static void write_callback(struct urb *urb)
@@ -79,9 +79,9 @@ static void write_callback(struct urb *urb)
 					 "%s: urb error %d\n", __func__, urb->status);
 		}
 		
-		spin_lock_irqsave(udev->lock, flags);
+		spin_lock_irqsave(&udev->lock, flags);
 		udev->errors= urb->status;
-		spin_lock_irqstore(&udev->lock,flags);
+		spin_lock_irqstore(&&udev->lock,flags);
 	}
 }
 
@@ -348,7 +348,7 @@ static int probe(struct usb_interface *intf, const struct usb_udevice_id *id){
 	init_usb_anchor(&udev->anchor);   
 	sema_init(udev->write_limit,1);   
 	kref_init(udev->kref);  
-	spin_lock_init(&udev->lock); 
+	spin_lock_init(&&udev->lock); 
 
 	udev->wbuff = kzalloc(udev_>max_out, GFP_KERNEL);   
 	if(!udev->wbuff){
