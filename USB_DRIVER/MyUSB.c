@@ -283,7 +283,7 @@ static int suspend(struct usb_interface *intf, pm_message_t message)
 	struct my_usb * udev = usb_get_intfdata(intf);   
 		
 		if(udev){
-			udev_info(&interface->udev, "suspending udevice");
+			dev_info(&udev->interface->dev, "suspending udevice");
 			wait_stop_all_urbs(udev);
 			return 0;
 		}
@@ -297,13 +297,22 @@ static int resume(struct usb_interface *intf)
 	usb_anchor_resume_wakeups(&udev->anchor);
 	return 0;
 }
-static int probe(struct usb_interface *intf, const struct usb_udevice_id *id){
+static int probe(struct usb_interface *intf, const struct usb_device_id *id){
 	int ret = 0;
 	struct usb_host_interface *h_interface;   
 	struct usb_endpoint_descriptor *e_desc, *bulk_out, *int_in;
 	static struct my_usb *udev;
 	int i, val;
 
+	if(id->idVendor != VENDOR_ID){
+		dev_err(&interface->dev,"Incorrect vendor");
+		ret = -1;
+	}
+
+	if(id->idProduct != PRODUCT_ID){
+		dev_err(&interface->dev,"Incorrect product");
+		ret = -1;
+	}
 
 	h_interface = intf->cur_altsetting;
 	for(i = 0; i< h_interface->desc.bNumEndpoints; i++){
@@ -395,7 +404,7 @@ static int __init usb_init(void)
 	return ret;
 }
 
-static void __exit usb_exit(void);
+static void __exit usb_exit(void)
 {
 	pr_info("Deregistering device\n");
 	usb_deregister(&driver);
