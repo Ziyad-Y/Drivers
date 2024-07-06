@@ -109,7 +109,7 @@ static ssize_t write(struct file *file,
 										GFP_KERNEL,
 										&udev->bulk_urb->transfer_dma);
 
-	if(copy_to_user(buffer,udev->wbuff,write_size)){
+	if(copy_from_user(buffer,udev->wbuff,write_size)){
 		ret = -EFAULT;
 		goto exit;
 	}    
@@ -173,7 +173,7 @@ static ssize_t read(struct file *file,
 	if(count==0)
 		return 0;   
 
-	if(copy_from_user(udev->rbuff,buffer,read_size)){
+	if(copy_to_user(udev->rbuff,buffer,read_size)){
 		ret=-EFAULT;
 		goto exit;
 	}
@@ -304,15 +304,6 @@ static int probe(struct usb_interface *intf, const struct usb_udevice_id *id){
 	static struct my_usb *udev;
 	int i, val;
 
-	if(id->idVendor != VENDOR_ID){
-		dev_err(&intf->dev,"Incorrect vendor");
-		ret = -1;
-	}
-
-	if(id->idProduct != PRODUCT_ID){
-		dev_err(&intf->dev,"Incorrect product");
-		ret = -1;
-	}
 
 	h_interface = intf->cur_altsetting;
 	for(i = 0; i< h_interface->desc.bNumEndpoints; i++){
