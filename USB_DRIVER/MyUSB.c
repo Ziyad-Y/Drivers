@@ -1,7 +1,7 @@
 #include "MyUSB.h"   
 
 
-static struct usb_udevice_id usb_table[]= {
+static struct usb_device_id usb_table[]= {
 	{USB_DEVICE(VENDOR_ID, PRODUCT_ID)},
 	{}
 };
@@ -60,7 +60,7 @@ static void read_callback(struct urb *urb)
 		}
 		
 	}
-	spin_lock_irqrestore(&udev->lock,flags);
+	spin_unlock_irqrestore(&udev->lock,flags);
 }   
 
 static void write_callback(struct urb *urb)
@@ -80,7 +80,7 @@ static void write_callback(struct urb *urb)
 		
 		spin_lock_irqsave(&udev->lock, flags);
 		udev->errors= urb->status;
-		spin_lock_irqrestore(&udev->lock,flags);
+		spin_unlock_irqrestore(&udev->lock,flags);
 	}
 }
 
@@ -92,7 +92,7 @@ static ssize_t write(struct file *file,
 	struct my_usb *udev;   
 	int ret =0;   
 	udev= file->private_data;
-	size_t write_size = MIN(udev->max_out, count);  
+	int write_size = MIN(udev->max_out, count);  
 
 	down(&udev->write_limit);
 
@@ -157,7 +157,7 @@ static ssize_t read(struct file *file,
 	struct my_usb *udev;
 	int ret=0;     
 	int interval=10;
-	size_t read_size = MIN(udev->max_in, count);    
+	int read_size = MIN(udev->max_in, count);    
 
 	udev->private_data;
 
